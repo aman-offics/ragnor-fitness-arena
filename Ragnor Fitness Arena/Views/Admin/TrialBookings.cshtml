@@ -1,0 +1,86 @@
+﻿@model List<Ragnor_Fitness_Arena.Models.TrialBooking>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@{
+    ViewData["Title"] = "Trial Bookings";
+}
+
+<div class="container mt-5">
+    <div class="card shadow">
+        <div class="card-header bg-dark text-white text-center">
+            <h3>Trial Booking Requests</h3>
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped text-center align-middle">
+
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Date</th>
+                            <th>Message</th>
+                            <th>Booked On</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @if (Model.Count == 0)
+                        {
+                            <tr>
+                                <td colspan="5">No Trial Bookings Found</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.FullName</td>
+                                    <td>@item.PhoneNumber</td>
+                                    <td>@item.PreferredDate.ToShortDateString()</td>
+                                    <td>@item.Message</td>
+                                    <td>@item.CreatedAt.ToShortDateString()</td>
+                                    <td>
+                                        @if (item.Status == "Pending")
+                                        {
+                                            <span class="badge bg-warning text-dark">Pending</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-success">Contacted</span>
+                                        }
+                                    </td>
+
+                                    <td>
+                                        @if (item.Status == "Pending")
+                                        {
+                                            <a asp-action="ToggleStatus"
+                                               asp-route-id="@item.Id"
+                                               class="btn btn-sm btn-success">
+                                                Change to Contacted
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a asp-action="ToggleStatus"
+                                               asp-route-id="@item.Id"
+                                               class="btn btn-sm btn-warning">
+                                                Change to Pending
+                                            </a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

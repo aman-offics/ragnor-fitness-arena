@@ -1,0 +1,51 @@
+﻿@model List<Ragnor_Fitness_Arena.Models.MembershipPlan>
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<div class="container mt-5">
+    <h2>Membership Plans</h2>
+
+    <a asp-action="AddPlan" class="btn btn-success mb-3">Add New Plan</a>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Plan Name</th>
+                <th>Price</th>
+                <th>Duration</th>
+                <th>Features</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var plan in Model)
+            {
+                <tr>
+                    <td>@plan.PlanName</td>
+                    <td>@plan.Price</td>
+                    <td>@plan.Duration</td>
+                    <td>@plan.Features</td>
+
+                    <td>
+                        <a asp-controller="Admin"
+                           asp-action="EditPlan"
+                           asp-route-id="@plan.PlanId"
+                           class="btn btn-warning btn-sm">
+                            Edit
+                        </a>
+
+                        <a asp-controller="Admin"
+                           asp-action="DeletePlan"
+                           asp-route-id="@plan.PlanId"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Delete this plan?')">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,631 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Gym Template">
+    <meta name="keywords" content="Gym, fitness">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ragnor Fitness Arena</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Muli:300,400,500,600,700,800,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Oswald:300,400,500,600,700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- CSS FILES (IMPORTANT: ~/ use pannunga) -->
+    <link rel="stylesheet" href="/User/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/User/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/User/css/flaticon.css" />
+    <link rel="stylesheet" href="/User/css/owl.carousel.min.css" />
+    <link rel="stylesheet" href="/User/css/barfiller.css" />
+    <link rel="stylesheet" href="/User/css/magnific-popup.css" />
+    <link rel="stylesheet" href="/User/css/slicknav.min.css" />
+    <link rel="stylesheet" href="/User/css/style.css" />
+
+
+    <style>
+        #scrollTopBtn {
+            display: none;
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 999;
+            border: none;
+            background-color: #ff6600;
+            color: white;
+            cursor: pointer;
+            padding: 12px 16px;
+            border-radius: 50%;
+            font-size: 18px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            transition: 0.3s;
+        }
+
+            #scrollTopBtn:hover {
+                background-color: #e65c00;
+            }
+    </style>
+</head>
+
+<body>
+
+    <!-- Page Preloader -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Header Section Begin -->
+    <header class="header-section">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="logo">
+                        <a asp-controller="Home" asp-action="Index"></a>
+                        <img src="/User/img/logo.png" alt="">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <nav class="nav-menu">
+                        <ul>
+                            <li class="active">
+                                <a asp-controller="Home" asp-action="Index">HOME</a>
+                            </li>
+
+                            <li>
+                                <a asp-controller="Home" asp-action="about">ABOUT</a>
+                            </li>
+
+                            <li>
+                                <a asp-controller="Home" asp-action="ClassDetails">CLASSES</a>
+                            </li>
+
+                            <li>
+                                <a asp-controller="Home" asp-action="Service">SERVICES</a>
+                            </li>
+
+                            <li>
+                                <a asp-controller="Home" asp-action="Team">OUR TEAM</a>
+                            </li>
+
+                            <li>
+                                <a href="#">PAGES</a>
+                                <ul class="dropdown">
+                                    <li><a asp-controller="Home" asp-action="about">About Us</a></li>
+                                    <li><a asp-controller="Home" asp-action="ClassTimetable">Class Timetable</a></li>
+                                    <li><a asp-controller="Home" asp-action="bmicalculator">BMI Calculator</a></li>
+                                    <li><a asp-controller="Home" asp-action="Team">Team</a></li>
+                                    <li><a asp-controller="Home" asp-action="Gallery">Gallery</a></li>
+                                    <li><a asp-controller="Home" asp-action="blog">Blog</a></li>
+                                    <li><a asp-controller="Home" asp-action="Error404">404</a></li>
+                                </ul>
+                            </li>
+
+                            <li>
+                                <a asp-controller="Home" asp-action="Contact">CONTACT</a>
+                            </li>
+
+                        </ul>
+                    </nav>
+
+                </div>
+                <div class="col-lg-3">
+                    <div class="top-option" style="display:flex;align-items:center;gap:15px;">
+
+                        @{
+                            var userId = Context.Session.GetInt32("UserId");
+                            var username = Context.Session.GetString("UserName");
+                        }
+
+                        @if (userId == null)
+                        {
+                            <a href="javascript:void(0)"
+                               data-toggle="modal"
+                               data-target="#loginModal"
+                               style="color:#fff;font-weight:600;">
+                                LOGIN
+                            </a>
+
+                            <a href="javascript:void(0)"
+                               data-toggle="modal"
+                               data-target="#signupModal"
+                               style="color:#ff7a00;font-weight:600;">
+                                SIGNUP
+                            </a>
+                        }
+                        else
+                        {
+                            <span style="color:#fff;font-weight:600;">
+                                Hi, @username
+                            </span>
+
+                            <a asp-controller="User"
+                               asp-action="Logout"
+                               style="color:#ff7a00;font-weight:600;">
+                                LOGOUT
+                            </a>
+                        }
+
+                        <a asp-controller="Admin" asp-action="Login"
+                           class="btn btn-outline-danger btn-sm ms-2">
+                            Admin
+                        </a>
+
+                            @* <div class="to-social"> *@
+                            @*     <a href="#"><i class="fa fa-facebook"></i></a> *@
+                            @*     <a href="#"><i class="fa fa-twitter"></i></a> *@
+                            @*     <a href="#"><i class="fa fa-youtube-play"></i></a> *@
+                            @*     <a href="#"><i class="fa fa-instagram"></i></a> *@
+                            @* </div> *@
+
+                    </div>
+    
+                </div>
+
+                @*         <div class="to-search search-switch">  *@
+                @*           <i class="fa fa-search"></i>  *@
+                @*         </div> *@
+                @*         <div class="to-social"> *@
+                @*             <a href="#"><i class="fa fa-facebook"></i></a> *@
+                @*             <a href="#"><i class="fa fa-twitter"></i></a> *@
+                @*             <a href="#"><i class="fa fa-youtube-play"></i></a> *@
+                @*             <a href="#"><i class="fa fa-instagram"></i></a> *@
+                @*         </div> *@
+                @*     </div> *@
+                @* </div> *@
+            </div>
+             <div class="canvas-open">
+                <i class="fa fa-bars"></i>
+            </div>
+        </div>
+    </header>
+    <!-- Header End -->
+    <!-- 🔥 PAGE CONTENT COMES HERE -->
+    @RenderBody()
+
+    <!--login start-->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="background:#111; border-radius:8px;">
+
+                <!-- HEADER -->
+                <div class="modal-header border-0">
+                    <h4 class="modal-title text-white">User Login</h4>
+                    <button type="button" class="close text-white" data-dismiss="modal">
+                        &times;
+                    </button>
+                </div>
+
+                <!-- BODY -->
+                <div class="modal-body">
+
+                    <form asp-controller="User" asp-action="Login" method="post">
+
+                        <div class="form-group">
+                            <input type="email"
+                                   name="Email"
+                                   class="form-control"
+                                   placeholder="Email"
+                                   required>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="password"
+                                   name="Password"
+                                   class="form-control"
+                                   placeholder="Password"
+                                   required>
+                        </div>
+
+                        <button type="submit"
+                                class="btn btn-warning btn-block">
+                            LOGIN
+                        </button>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="trainerAppointmentModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Book Trainer Appointment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <form asp-controller="Home" asp-action="BookTrainerAppointment" method="post">
+
+                        <input type="text" name="FullName" class="form-control mb-2" placeholder="Full Name" required>
+
+                        <input type="text" name="PhoneNumber" class="form-control mb-2" placeholder="Phone Number" required>
+
+                        <select name="TrainerName" class="form-control mb-2">
+                            <option value="John Trainer">John Trainer</option>
+                            <option value="Sarah Trainer">Sarah Trainer</option>
+                            <option value="Mike Trainer">Mike Trainer</option>
+                        </select>
+
+                        <input type="date" name="AppointmentDate" class="form-control mb-2" required>
+
+                        <input type="time" name="AppointmentTime" class="form-control mb-2" required>
+
+                        <textarea name="Message" class="form-control mb-2" placeholder="Message"></textarea>
+
+                        <button type="submit" class="btn btn-warning w-100">
+                            Book Appointment
+                        </button>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="trialModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Book Free Trial</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <form method="post" asp-controller="Home" asp-action="BookTrial">
+
+                        <div class="mb-3">
+                            <input type="text" name="FullName" class="form-control" placeholder="Full Name" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <input type="text" name="PhoneNumber" class="form-control" placeholder="Phone Number" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <input type="date" name="PreferredDate" class="form-control" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <textarea name="Message" class="form-control" placeholder="Message"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-warning w-100">
+                            Submit
+                        </button>
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="successModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center p-4">
+
+                <h4 class="text-success">🎉 Success!</h4>
+                <p>Your Free Trial Booking has been submitted.</p>
+
+            </div>
+        </div>
+    </div>
+    <!-- signup start-->
+    <div class="modal fade" id="signupModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="background:#111; border-radius:8px;">
+
+                <!-- HEADER -->
+                <div class="modal-header border-0">
+                    <h4 class="modal-title text-white">User Signup</h4>
+                    <button type="button" class="close text-white" data-dismiss="modal">
+                        &times;
+                    </button>
+                </div>
+
+                <!-- BODY -->
+                <div class="modal-body">
+
+                    <form asp-controller="User" asp-action="Signup" method="post">
+
+                        <div class="form-group">
+                            <input type="text"
+                                   name="FullName"
+                                   class="form-control"
+                                   placeholder="Full Name"
+                                   required>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="email"
+                                   name="Email"
+                                   class="form-control"
+                                   placeholder="Email"
+                                   required>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="password"
+                                   name="Password"
+                                   class="form-control"
+                                   placeholder="Password"
+                                   required>
+                        </div>
+
+                        <button type="submit"
+                                class="btn btn-warning btn-block">
+                            SIGNUP
+                        </button>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="trainerModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5>Book Trainer Appointment</h5>
+                </div>
+
+                <div class="modal-body">
+
+                    <form method="post" asp-controller="Home" asp-action="BookTrainer">
+
+                        <input type="text" name="Name" class="form-control mb-2" placeholder="Name" required />
+                        <input type="text" name="Phone" class="form-control mb-2" placeholder="Phone" required />
+
+                        <select name="Trainer" class="form-control mb-2">
+                            <option>Trainer 1</option>
+                            <option>Trainer 2</option>
+                            <option>Trainer 3</option>
+                        </select>
+
+                        <input type="date" name="Date" class="form-control mb-2" required />
+                        <input type="time" name="Time" class="form-control mb-2" required />
+
+                        <button class="btn btn-warning w-100">Book</button>
+
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Get In Touch Section Begin -->
+    <div class="gettouch-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="gt-text">
+                        <i class="fa fa-map-marker"></i>
+                        <p>12/69A,Old cuddalore Main road,<br /> Thiruvathigai,panruti.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="gt-text">
+                        <i class="fa fa-mobile"></i>
+                        <ul>
+                            <li>90431 44573</li>
+                            <li>90431 44573</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="gt-text email">
+                        <i class="fa fa-envelope"></i>
+                        <p>mdaman@gmail.com</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Get In Touch Section End -->
+    <!-- Footer Section Begin -->
+    <section class="footer-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="fs-about">
+                        <div class="fa-logo">
+                            <a href="#"><img src="/User/img/logo.png" alt=""></a>
+                        </div>
+                        <p>
+                            Ragnar Fitness Arena is dedicated to helping you achieve your fitness goals with expert trainers, modern equipment,
+                            and personalized programs. Train smarter, stay healthier, and become stronger every day.
+                        </p>
+                        <div class="fa-social">
+                            <a href="#"><i class="fa fa-facebook"></i></a>
+                            <a href="#"><i class="fa fa-twitter"></i></a>
+                            <a href="#"><i class="fa fa-youtube-play"></i></a>
+                            <a href="#"><i class="fa fa-instagram"></i></a>
+                            <a href="#"><i class="fa  fa-envelope-o"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-6">
+                    <div class="fs-widget">
+                        <h4>Useful links</h4>
+                        <ul>
+                            <li><a href="#">About</a></li>
+                            <li><a href="#">Blog</a></li>
+                            <li><a href="#">Classes</a></li>
+                            <li><a href="#">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-6">
+                    <div class="fs-widget">
+                        <h4>Support</h4>
+                        <ul>
+                            <li><a href="#">Login</a></li>
+                            <li><a href="#">My account</a></li>
+                            <li><a href="#">Subscribe</a></li>
+                            <li><a href="#">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="fs-widget">
+                        <h4>Tips & Guides</h4>
+                        <div class="fw-recent">
+                            <h6><a href="#">Physical fitness may help prevent depression, anxiety</a></h6>
+                            <ul>
+                                <li>3 min read</li>
+                                <li>20 Comment</li>
+                            </ul>
+                        </div>
+                        <div class="fw-recent">
+                            <h6><a href="#">Fitness: The best exercise to lose belly fat and tone up...</a></h6>
+                            <ul>
+                                <li>3 min read</li>
+                                <li>20 Comment</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <div class="copyright-text">
+                        <p>
+                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                            © 2026 Ragnor Fitness Arena. Built for Strength.
+                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Footer Section End -->
+   
+    <!-- JS FILES -->
+    <script src="/User/js/jquery-3.3.1.min.js"></script>
+    <script src="/User/js/bootstrap.min.js"></script>
+    <script src="/User/js/jquery.magnific-popup.min.js"></script>
+    <script src="/User/js/masonry.pkgd.min.js"></script>
+    <script src="/User/js/jquery.barfiller.js"></script>
+    <script src="/User/js/jquery.slicknav.js"></script>
+    <script src="/User/js/owl.carousel.min.js"></script>
+    <script src="/User/js/main.js"></script>
+    <button id="scrollTopBtn">↑</button>
+    @* CORNER ARROW BUTTON *@
+    <script>
+        const scrollBtn = document.getElementById("scrollTopBtn");
+
+        window.addEventListener("scroll", function () {
+            if (document.documentElement.scrollTop > 200) {
+                scrollBtn.style.display = "block";
+            } else {
+                scrollBtn.style.display = "none";
+            }
+        });
+
+        scrollBtn.addEventListener("click", function () {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+    </script>
+
+    @* LOGIN PANNAMA PLAN PAKAUM BOTHU *@
+    <script>
+        function showLoginAlert() {
+            var loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+            loginModal.show();
+        }
+    </script>
+@*     FREE TRAIL CLICK FUNCTION
+ *@    <script>
+        function openTrialModal() {
+            var modalElement = document.getElementById('trialModal');
+            var modal = new bootstrap.Modal(modalElement);
+            modal.show();
+        }
+    </script>
+    @*PLAN KU SCROLL AGUM*@
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            document.querySelectorAll(".scroll-plan").forEach(function (btn) {
+                btn.addEventListener("click", function (e) {
+                    e.preventDefault(); // stop default jump
+
+                    var element = document.getElementById("plans");
+
+                    if (element) {
+                        var offset = 80; // navbar height approx
+                        var elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+
+                        window.scrollTo({
+                            top: elementPosition - offset,
+                            behavior: "smooth"
+                        });
+                    }
+                });
+            });
+
+        });
+    </script>
+
+ @* <script> *@
+ @*        $(document).ready(function(){ *@
+
+ @*            $(".plan-slider").owlCarousel({ *@
+ @*                items:3, *@
+ @*                loop:true, *@
+ @*                margin:30, *@
+ @*                nav:true, *@
+ @*                dots:false, *@
+ @*                autoplay:true, *@
+ @*                autoplayTimeout:3000, *@
+
+ @*                navText:[ *@
+ @*                    "<div class='slider-btn left-btn'><i class='fa fa-angle-left'></i></div>", *@
+ @*                    "<div class='slider-btn right-btn'><i class='fa fa-angle-right'></i></div>" *@
+ @*                ], *@
+
+ @*                responsive:{ *@
+ @*                    0:{items:1}, *@
+ @*                    768:{items:2}, *@
+ @*                    992:{items:3} *@
+ @*                } *@
+ @*            }); *@
+
+ @*        }); *@
+ @*    </script> *@
+    <script>
+        function openTrainerModal(){
+
+            var modalElement = document.getElementById('trainerAppointmentModal');
+
+            var modal = new bootstrap.Modal(modalElement);
+
+            modal.show();
+
+        }
+    </script>
+
+    <script>
+        function openTrainerModal() {
+            var modal = new bootstrap.Modal(document.getElementById('trainerModal'));
+            modal.show();
+        }
+    </script>
+
+</body>
+</html>

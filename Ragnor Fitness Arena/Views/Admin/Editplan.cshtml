@@ -1,0 +1,41 @@
+﻿@model Ragnor_Fitness_Arena.Models.MembershipPlan
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2 class="mb-4">Edit Plan</h2>
+
+<div class="container">
+
+    <form method="post">
+
+        <input type="hidden" asp-for="PlanId" />
+
+        <div class="mb-3">
+            <label>Plan Name</label>
+            <input asp-for="PlanName" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>Price</label>
+            <input asp-for="Price" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>Duration (Months)</label>
+            <input asp-for="Duration" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>Features</label>
+            <input asp-for="Features" class="form-control" />
+        </div>
+
+        <button type="submit" class="btn btn-primary" onclick="this.innerHTML='⏳ Loading...'; this.disabled=true;">
+            Update
+        </button>
+
+    </form>
+
+</div>

@@ -1,0 +1,173 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">Admin Dashboard</h2>
+
+    <!-- STAT CARDS -->
+  @*   <div class="row g-3">
+
+        <div class="col-md-3">
+            <div class="card bg-dark text-white text-center p-3 shadow">
+                <h5>Total Users</h5>
+                <h2>@ViewBag.TotalUsers</h2>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-success text-white text-center p-3 shadow">
+                <h5>Active Memberships</h5>
+                <h2>@ViewBag.ActiveMemberships</h2>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark text-center p-3 shadow">
+                <h5>Pending Trials</h5>
+                <h2>@ViewBag.PendingTrials</h2>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-primary text-white text-center p-3 shadow">
+                <h5>Total Trial Requests</h5>
+                <h2>@ViewBag.TotalTrials</h2>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-info text-white text-center p-3 shadow">
+                <h5>Trainer Appointments</h5>
+                <h2>@ViewBag.TrainerAppointments</h2>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-danger text-white text-center p-3 shadow">
+                <h5>Pending Appointments</h5>
+                <h2>@ViewBag.PendingAppointments</h2>
+            </div>
+        </div>
+
+    </div>
+
+ *@
+    <div class="row mt-4">
+
+        <div class="col-md-3">
+            <div class="card bg-dark text-white text-center p-3 shadow">
+                <h6>Total Users</h6>
+                <h2>@ViewBag.TotalUsers</h2>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-primary text-white text-center p-3 shadow">
+                <h6>Total Plans</h6>
+                <h2>@ViewBag.TotalPlans</h2>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-success text-white text-center p-3 shadow">
+                <h6>Active Memberships</h6>
+                <h2>@ViewBag.ActiveMemberships</h2>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark text-center p-3 shadow">
+                <h6>New Messages</h6>
+                <h2>@ViewBag.NewMessages</h2>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="row mt-4">
+
+        <div class="col-md-3">
+            <div class="card bg-info text-white text-center p-3 shadow">
+                <h6>Total Contacts</h6>
+                <h2>@ViewBag.TotalContacts</h2>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-secondary text-white text-center p-3 shadow">
+                <h6>Total Trials</h6>
+                <h2>@ViewBag.TotalTrials</h2>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark text-center p-3 shadow">
+                <h6>Pending Trials</h6>
+                <h2>@ViewBag.PendingTrials</h2>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-danger text-white text-center p-3 shadow">
+                <h6>Pending Appointments</h6>
+                <h2>@ViewBag.PendingAppointments</h2>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="row mt-4">
+
+        <div class="col-md-3">
+            <div class="card bg-primary text-white text-center p-3 shadow">
+                <h6>Total Appointments</h6>
+                <h2>@ViewBag.TotalAppointments</h2>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+    <!-- PLAN STATS TABLE -->
+    <div class="card shadow mt-4">
+        <div class="card-header bg-dark text-white">
+            Active Memberships by Plan
+        </div>
+
+        <div class="card-body">
+            <table class="table table-bordered text-center align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Plan</th>
+                        <th>Active Members</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (ViewBag.PlanStats != null)
+                    {
+                        foreach (var item in ViewBag.PlanStats)
+                        {
+                            <tr>
+                                <td>@item.Item1</td>
+                                <td>@item.Item2</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="2">No Active Memberships</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>

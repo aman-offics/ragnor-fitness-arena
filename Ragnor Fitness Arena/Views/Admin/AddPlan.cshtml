@@ -1,0 +1,35 @@
+﻿@model Ragnor_Fitness_Arena.Models.MembershipPlan
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<div class="container mt-5">
+    <h2>Add Membership Plan</h2>
+
+    <form asp-action="AddPlan" method="post">
+
+        <div class="form-group mb-3">
+            <label>Plan Name</label>
+            <input asp-for="PlanName" class="form-control" required />
+        </div>
+
+        <div class="form-group mb-3">
+            <label>Price</label>
+            <input asp-for="Price" class="form-control" required />
+        </div>
+
+        <div class="form-group mb-3">
+            <label>Duration</label>
+            <input asp-for="Duration" class="form-control" placeholder="3 Months / 6 Months" required />
+        </div>
+
+        <div class="form-group mb-3">
+            <label>Features</label>
+            <textarea asp-for="Features" class="form-control" rows="3"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary" >Save Plan</button>
+
+    </form>
+</div>

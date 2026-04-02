@@ -1,0 +1,74 @@
+﻿@using Ragnor_Fitness_Arena.Models.ViewModels
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Membership List</h2>
+
+<form method="get" class="row mb-3">
+
+    <div class="col-md-4">
+        <input type="text" name="search" class="form-control"
+               placeholder="Search by Name or Email" />
+    </div>
+
+    <div class="col-md-3">
+        <select name="status" class="form-control">
+            <option value="">All Status</option>
+            <option value="Active">Active</option>
+            <option value="Expired">Expired</option>
+        </select>
+    </div>
+
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-primary w-100">
+            Search
+        </button>
+    </div>
+
+</form>     
+
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Plan</th>
+            <th>Start</th>
+            <th>Expiry</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.FullName</td>
+                <td>@item.Email</td>
+                <td>@item.PlanName</td>
+                <td>@item.StartDate.ToShortDateString()</td>
+                <td>@item.ExpiryDate.ToShortDateString()</td>
+                <td>
+                    @if (item.Status == "Active")
+                    {
+                        <span class="badge bg-success">Active</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Expired</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="RemoveMembership"
+                       asp-route-id="@item.MembershipId"
+                       class="btn btn-sm btn-danger"
+                       onclick="return confirm('Are you sure you want to remove this membership?');">
+                        Remove
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

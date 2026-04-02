@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Add User";
+    Layout = "_AdminLayout";
+}
+
+<h3 class="mb-4">Add New User</h3>
+
+<form method="post">
+    <div class="form-group mb-3">
+        <input type="text" name="fullname" class="form-control" placeholder="Full Name" required />
+    </div>
+
+    <div class="form-group mb-3">
+        <input type="email" name="email" class="form-control" placeholder="Email" required />
+    </div>
+
+    <div class="form-group mb-3">
+        <input type="password" name="password" class="form-control" placeholder="Password" required />
+    </div>
+
+    <button type="submit" class="btn btn-success" >Add User</button>
+    <a href="/Admin/Users" class="btn btn-secondary">Back</a>
+</form>

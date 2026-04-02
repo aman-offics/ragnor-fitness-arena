@@ -1,0 +1,110 @@
+﻿@model List<Ragnor_Fitness_Arena.Models.Contact>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2 class="mb-4">Contact Messages</h2>
+<form method="get" class="row mb-3">
+
+    <div class="col-md-4">
+        <input type="text" name="search" class="form-control" placeholder="Search Name or Email" />
+    </div>
+
+    <div class="col-md-3">
+        <select name="status" class="form-control">
+            <option value="">All</option>
+            <option value="New">New</option>
+            <option value="Seen">Seen</option>
+        </select>
+    </div>
+
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-primary" onclick="this.innerHTML='⏳ Loading...'; this.disabled=true;">Filter</button>
+    </div>
+
+</form>
+
+<div class="card shadow">
+    <div class="card-body">
+
+        <table class="table table-bordered table-striped text-center">
+
+            <thead class="table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                
+                    <th>Message</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@item.Email</td>
+                        
+                        <td>@item.Comment</td>
+                        <td>@item.CreatedAt.ToShortDateString()</td>
+                        <td>
+                            @* @if (item.Status == "New")
+                            {
+                                <span class="badge bg-warning text-dark">New</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success">Seen</span>
+                            } *@
+
+                            @if (item.Status == "Pending")
+                            {
+                                <span class="badge bg-warning text-dark">Pending</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success">Confirmed</span>
+                            }
+                        </td>
+
+                        <td>
+                            @if (item.Status == "New")
+                            {
+                                <a asp-action="MarkAsSeen"
+                                   asp-route-id="@item.Id"
+                                   class="btn btn-sm btn-success">
+                                    Mark Seen
+                                </a>
+                            }
+
+                            <a asp-action="DeleteMessage"
+                               asp-route-id="@item.Id"
+                               class="btn btn-sm btn-danger">
+                                Delete
+                            </a>
+                        </td>    
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+
+        <div class="text-center mt-4">
+
+            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                <a asp-action="ContactMessages"
+                   asp-route-page="@i"
+                   class="btn btn-sm @(i == ViewBag.CurrentPage ? "btn-primary" : "btn-outline-primary")">
+                    @i
+                </a>
+            }
+
+        </div>
+
+    </div>
+</div>

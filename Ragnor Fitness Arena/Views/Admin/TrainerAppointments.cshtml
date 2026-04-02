@@ -1,0 +1,108 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var appointments = ViewBag.Appointments as List<string[]>;
+}
+
+<h2 class="mb-4">Trainer Appointments</h2>
+<form method="get" class="mb-3">
+
+    <div class="input-group">
+
+        <input type="text"
+               name="search"
+               value="@ViewBag.Search"
+               class="form-control"
+               placeholder="Search name, phone, trainer">
+
+        <button class="btn btn-primary">
+            Search
+        </button>
+
+    </div>
+
+</form>
+<table class="table table-bordered text-center">
+
+    <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Trainer</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        @{
+            int i = 1;
+
+            foreach (var a in appointments)
+            {
+                <tr>
+                    <td>@i</td>
+                    <td>@a[1]</td>
+                    <td>@a[2]</td>
+                    <td>@a[3]</td>
+                    <td>@a[4]</td>
+                    <td>@a[5]</td>
+                    <td>
+                        @if (a[6] == "Pending")
+                        {
+                            <span class="badge bg-warning">Pending</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success">Confirmed</span>
+                        }
+                    </td>
+                    <td>
+
+                        @if (a[6] == "Pending")
+                        {
+                            <a asp-controller="Admin"
+                               asp-action="UpdateAppointmentStatus"
+                               asp-route-id="@a[0]"
+                               asp-route-status="Confirmed"
+                               class="btn btn-success btn-sm">
+
+                                Confirm
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-controller="Admin"
+                               asp-action="UpdateAppointmentStatus"
+                               asp-route-id="@a[0]"
+                               asp-route-status="Pending"
+                               class="btn btn-warning btn-sm">
+
+                                Mark Pending
+                            </a>
+                        }
+
+                        <a asp-controller="Admin"
+                           asp-action="DeleteAppointment"
+                           asp-route-id="@a[0]"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Are you sure to delete this appointment?')">
+
+                            Delete
+                        </a>
+
+                    </td>
+
+                   
+                </tr>
+
+              
+            }
+        }
+
+    </tbody>
+
+</table>

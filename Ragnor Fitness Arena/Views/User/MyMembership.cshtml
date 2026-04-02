@@ -1,0 +1,71 @@
+﻿@model List<Ragnor_Fitness_Arena.Models.UserMembershipViewModel>
+
+@{
+    ViewData["Title"] = "My Membership";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="pricing-section spad">
+    <div class="container">
+        <div class="section-title text-center">
+            <h2>My Membership</h2>
+        </div>
+
+        <div class="row justify-content-center">
+
+            @if (Model.Count == 0)
+            {
+                <div class="col-lg-6">
+                    <div class="alert alert-warning text-center">
+                        No Active Membership
+                    </div>
+                </div>
+            }
+            else
+            {
+                foreach (var item in Model)
+                {
+                    var isActive = item.ExpiryDate > DateTime.Now;
+                    var remainingDays = (item.ExpiryDate - DateTime.Now).Days;
+
+                    <div class="col-lg-4 col-md-6">
+                        <div class="ps-item">
+                            <h3>@item.PlanName</h3>
+
+                            <div class="pi-price">
+                                <h2>₹ @item.Price</h2>
+                                <span>@item.Duration MONTHS</span>
+                            </div>
+
+                            <ul>
+                                <li>Start Date: @item.StartDate.ToShortDateString()</li>
+                                <li>Expiry Date: @item.ExpiryDate.ToShortDateString()</li>
+
+                                @if (isActive)
+                                {
+                                    <li>Status: <span style="color:lime;">Active</span></li>
+                                    <li>Remaining Days: @remainingDays</li>
+                                }
+                                else
+                                {
+                                    <li>Status: <span style="color:red;">Expired</span></li>
+                                }
+                            </ul>
+
+                            @if (isActive)
+                            {
+                                <form method="post" asp-action="CancelMembership">
+                                    <button type="submit" class="primary-btn pricing-btn">
+                                        Cancel Membership
+                                    </button>
+                                </form>
+                            }
+
+                        </div>
+                    </div>
+                }
+            }
+
+        </div>
+    </div>
+</section>  
