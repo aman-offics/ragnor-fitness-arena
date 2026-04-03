@@ -94,15 +94,19 @@ namespace Ragnor_Fitness_Arena.Controllers
             return View("Error404");
         }
 
-        // DEFAULT ERROR
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel
-            {
-                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
-            });
+            return Content("Error occurred. Check logs.");
         }
+        // DEFAULT ERROR
+        //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        //public IActionResult Error()
+        //{
+        //    return View(new ErrorViewModel
+        //    {
+        //        RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+        //    });
+        //}
 
         public IActionResult Index()
         {
