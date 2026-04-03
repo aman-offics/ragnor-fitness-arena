@@ -140,7 +140,7 @@ namespace Ragnor_Fitness_Arena.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return Content("HOME WORKING");
         }
 
         [HttpPost]
