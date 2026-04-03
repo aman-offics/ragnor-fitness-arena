@@ -13,3 +13,8 @@ COPY --from=build /app/out .
 ENTRYPOINT ["dotnet", "Ragnor Fitness Arena.dll"]
 
 
+
+
+
+
+
