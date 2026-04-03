@@ -108,34 +108,39 @@ namespace Ragnor_Fitness_Arena.Controllers
         //    });
         //}
 
+        //public IActionResult Index()
+        //{
+        //    List<MembershipPlan> plans = new List<MembershipPlan>();
+
+        //    string conStr = _configuration.GetConnectionString("DefaultConnection");
+
+        //    using (SqlConnection con = new SqlConnection(conStr))
+        //    {
+        //        string query = "SELECT PlanId, PlanName, Price, Duration, Features FROM MembershipPlans";
+        //        SqlCommand cmd = new SqlCommand(query, con);
+
+        //        con.Open();
+        //        SqlDataReader reader = cmd.ExecuteReader();
+
+        //        while (reader.Read())
+        //        {
+        //            plans.Add(new MembershipPlan
+        //            {
+        //                PlanId = (int)reader["PlanId"],
+        //                PlanName = reader["PlanName"].ToString(),
+        //                Price = (decimal)reader["Price"],
+        //                Duration = reader["Duration"].ToString(),
+        //                Features = reader["Features"].ToString()
+        //            });
+        //        }
+        //    }
+
+        //    return View(plans);
+        //}
+
         public IActionResult Index()
         {
-            List<MembershipPlan> plans = new List<MembershipPlan>();
-
-            string conStr = _configuration.GetConnectionString("DefaultConnection");
-
-            using (SqlConnection con = new SqlConnection(conStr))
-            {
-                string query = "SELECT PlanId, PlanName, Price, Duration, Features FROM MembershipPlans";
-                SqlCommand cmd = new SqlCommand(query, con);
-
-                con.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    plans.Add(new MembershipPlan
-                    {
-                        PlanId = (int)reader["PlanId"],
-                        PlanName = reader["PlanName"].ToString(),
-                        Price = (decimal)reader["Price"],
-                        Duration = reader["Duration"].ToString(),
-                        Features = reader["Features"].ToString()
-                    });
-                }
-            }
-
-            return View(plans);
+            return View();
         }
 
         [HttpPost]
