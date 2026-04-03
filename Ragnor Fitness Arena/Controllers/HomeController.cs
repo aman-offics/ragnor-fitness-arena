@@ -96,7 +96,7 @@ namespace Ragnor_Fitness_Arena.Controllers
 
         public IActionResult Error()
         {
-            return Content("Error occurred. Check logs.");
+            return Content("Something went wrong. Please try again later.");
         }
         // DEFAULT ERROR
         //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

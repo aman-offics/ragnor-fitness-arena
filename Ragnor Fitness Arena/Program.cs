@@ -36,7 +36,7 @@ app.UseAuthorization();
 
 app.UseExceptionHandler("/Home/Error");
 app.UseStatusCodePagesWithReExecute("/Home/Error");
-
+app.UseStatusCodePages("text/plain", "Error occurred");
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
