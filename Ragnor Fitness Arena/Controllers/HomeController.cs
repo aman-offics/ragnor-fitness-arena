@@ -108,93 +108,7 @@ namespace Ragnor_Fitness_Arena.Controllers
         //    });
         //}
 
-        //public IActionResult Index()
-        //{
-        //    List<MembershipPlan> plans = new List<MembershipPlan>();
-
-        //    string conStr = _configuration.GetConnectionString("DefaultConnection");
-
-        //    using (SqlConnection con = new SqlConnection(conStr))
-        //    {
-        //        string query = "SELECT PlanId, PlanName, Price, Duration, Features FROM MembershipPlans";
-        //        SqlCommand cmd = new SqlCommand(query, con);
-
-        //        con.Open();
-        //        SqlDataReader reader = cmd.ExecuteReader();
-
-        //        while (reader.Read())
-        //        {
-        //            plans.Add(new MembershipPlan
-        //            {
-        //                PlanId = (int)reader["PlanId"],
-        //                PlanName = reader["PlanName"].ToString(),
-        //                Price = (decimal)reader["Price"],
-        //                Duration = reader["Duration"].ToString(),
-        //                Features = reader["Features"].ToString()
-        //            });
-        //        }
-        //    }
-
-        //    return View(plans);
-        //}
         public IActionResult Index()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult BookTrial(string FullName, string PhoneNumber, DateTime PreferredDate, string Message)
-        {
-            string conStr = _configuration.GetConnectionString("DefaultConnection");
-
-            using (SqlConnection con = new SqlConnection(conStr))
-            {
-                string query = @"INSERT INTO TrialBookings 
-                        (FullName, PhoneNumber, PreferredDate, Message) 
-                        VALUES 
-                        (@n, @p, @d, @m)";
-
-                SqlCommand cmd = new SqlCommand(query, con);
-
-                cmd.Parameters.AddWithValue("@n", FullName);
-                cmd.Parameters.AddWithValue("@p", PhoneNumber);
-                cmd.Parameters.AddWithValue("@d", PreferredDate);
-                cmd.Parameters.AddWithValue("@m", Message);
-
-                con.Open();
-                cmd.ExecuteNonQuery();
-            }
-
-            TempData["Success"] = "Trial Booking Submitted!";   
-            return RedirectToAction("Index");
-        }
-
-        [HttpPost]
-        public IActionResult BookTrainerAppointment(TrainerAppointment model)
-        {
-            using (SqlConnection con = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
-            {
-                string query = @"INSERT INTO TrainerAppointments
-                        (FullName,PhoneNumber,TrainerName,AppointmentDate,AppointmentTime,Message)
-                        VALUES
-                        (@FullName,@PhoneNumber,@TrainerName,@AppointmentDate,@AppointmentTime,@Message)";
-
-                SqlCommand cmd = new SqlCommand(query, con);
-                cmd.Parameters.AddWithValue("@FullName", model.FullName);
-                cmd.Parameters.AddWithValue("@PhoneNumber", model.PhoneNumber);
-                cmd.Parameters.AddWithValue("@TrainerName", model.TrainerName);
-                cmd.Parameters.AddWithValue("@AppointmentDate", model.AppointmentDate);
-                cmd.Parameters.AddWithValue("@AppointmentTime", model.AppointmentTime);
-                cmd.Parameters.AddWithValue("@Message", model.Message);
-
-                con.Open();
-                cmd.ExecuteNonQuery();
-            }
-
-            TempData["Success"] = "Appointment Booked Successfully";
-            return RedirectToAction("Index");
-        }
-        public IActionResult Service()
         {
             List<MembershipPlan> plans = new List<MembershipPlan>();
 
@@ -202,7 +116,7 @@ namespace Ragnor_Fitness_Arena.Controllers
 
             using (SqlConnection con = new SqlConnection(conStr))
             {
-                string query = "SELECT * FROM MembershipPlans";
+                string query = "SELECT PlanId, PlanName, Price, Duration, Features FROM MembershipPlans";
                 SqlCommand cmd = new SqlCommand(query, con);
 
                 con.Open();
@@ -221,37 +135,120 @@ namespace Ragnor_Fitness_Arena.Controllers
                 }
             }
 
-            return View(plans);
-        }
+            //    return View(plans);
+            //}
 
-        [HttpPost]
-        public IActionResult BookTrainer(string Name, string Phone, string Trainer, DateTime Date, string Time)
-        {
-            string conStr = _configuration.GetConnectionString("DefaultConnection");
 
-            using (SqlConnection con = new SqlConnection(conStr))
+            //[HttpPost]
+            //public IActionResult BookTrial(string FullName, string PhoneNumber, DateTime PreferredDate, string Message)
+            //{
+            //    string conStr = _configuration.GetConnectionString("DefaultConnection");
+
+            //    using (SqlConnection con = new SqlConnection(conStr))
+            //    {
+            //        string query = @"INSERT INTO TrialBookings 
+            //                (FullName, PhoneNumber, PreferredDate, Message) 
+            //                VALUES 
+            //                (@n, @p, @d, @m)";
+
+            //        SqlCommand cmd = new SqlCommand(query, con);
+
+            //        cmd.Parameters.AddWithValue("@n", FullName);
+            //        cmd.Parameters.AddWithValue("@p", PhoneNumber);
+            //        cmd.Parameters.AddWithValue("@d", PreferredDate);
+            //        cmd.Parameters.AddWithValue("@m", Message);
+
+            //        con.Open();
+            //        cmd.ExecuteNonQuery();
+            //    }
+
+            //    TempData["Success"] = "Trial Booking Submitted!";   
+            //    return RedirectToAction("Index");
+            //}
+
+            //[HttpPost]
+            //public IActionResult BookTrainerAppointment(TrainerAppointment model)
+            //{
+            //    using (SqlConnection con = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+            //    {
+            //        string query = @"INSERT INTO TrainerAppointments
+            //                (FullName,PhoneNumber,TrainerName,AppointmentDate,AppointmentTime,Message)
+            //                VALUES
+            //                (@FullName,@PhoneNumber,@TrainerName,@AppointmentDate,@AppointmentTime,@Message)";
+
+            //        SqlCommand cmd = new SqlCommand(query, con);
+            //        cmd.Parameters.AddWithValue("@FullName", model.FullName);
+            //        cmd.Parameters.AddWithValue("@PhoneNumber", model.PhoneNumber);
+            //        cmd.Parameters.AddWithValue("@TrainerName", model.TrainerName);
+            //        cmd.Parameters.AddWithValue("@AppointmentDate", model.AppointmentDate);
+            //        cmd.Parameters.AddWithValue("@AppointmentTime", model.AppointmentTime);
+            //        cmd.Parameters.AddWithValue("@Message", model.Message);
+
+            //        con.Open();
+            //        cmd.ExecuteNonQuery();
+            //    }
+
+            //    TempData["Success"] = "Appointment Booked Successfully";
+            //    return RedirectToAction("Index");
+            //}
+            //public IActionResult Service()
+            //{
+            //    List<MembershipPlan> plans = new List<MembershipPlan>();
+
+            //    string conStr = _configuration.GetConnectionString("DefaultConnection");
+
+            //    using (SqlConnection con = new SqlConnection(conStr))
+            //    {
+            //        string query = "SELECT * FROM MembershipPlans";
+            //        SqlCommand cmd = new SqlCommand(query, con);
+
+            //        con.Open();
+            //        SqlDataReader reader = cmd.ExecuteReader();
+
+            //        while (reader.Read())
+            //        {
+            //            plans.Add(new MembershipPlan
+            //            {
+            //                PlanId = (int)reader["PlanId"],
+            //                PlanName = reader["PlanName"].ToString(),
+            //                Price = (decimal)reader["Price"],
+            //                Duration = reader["Duration"].ToString(),
+            //                Features = reader["Features"].ToString()
+            //            });
+            //        }
+            //    }
+
+            //    return View(plans);
+            //}
+
+            //[HttpPost]
+            //public IActionResult BookTrainer(string Name, string Phone, string Trainer, DateTime Date, string Time)
+            //{
+            //    string conStr = _configuration.GetConnectionString("DefaultConnection");
+
+            //    using (SqlConnection con = new SqlConnection(conStr))
+            //    {
+            //        string query = "INSERT INTO TrainerAppointments (Name, Phone, Trainer, Date, Time) VALUES (@n,@p,@t,@d,@ti)";
+
+            //        SqlCommand cmd = new SqlCommand(query, con);
+
+            //        cmd.Parameters.AddWithValue("@n", Name);
+            //        cmd.Parameters.AddWithValue("@p", Phone);
+            //        cmd.Parameters.AddWithValue("@t", Trainer);
+            //        cmd.Parameters.AddWithValue("@d", Date);
+            //        cmd.Parameters.AddWithValue("@ti", Time);
+
+            //        con.Open();
+            //        cmd.ExecuteNonQuery();
+            //    }
+
+            //    TempData["Success"] = "Appointment Booked!";
+            //    return RedirectToAction("Index");
+            //}
+
+            //[HttpPost]
+            //public IActionResult ContactSubmit(string Name, string Email, string Comment)
             {
-                string query = "INSERT INTO TrainerAppointments (Name, Phone, Trainer, Date, Time) VALUES (@n,@p,@t,@d,@ti)";
-
-                SqlCommand cmd = new SqlCommand(query, con);
-
-                cmd.Parameters.AddWithValue("@n", Name);
-                cmd.Parameters.AddWithValue("@p", Phone);
-                cmd.Parameters.AddWithValue("@t", Trainer);
-                cmd.Parameters.AddWithValue("@d", Date);
-                cmd.Parameters.AddWithValue("@ti", Time);
-
-                con.Open();
-                cmd.ExecuteNonQuery();
-            }
-
-            TempData["Success"] = "Appointment Booked!";
-            return RedirectToAction("Index");
-        }
-
-        [HttpPost]
-        public IActionResult ContactSubmit(string Name, string Email, string Comment)
-        {
             if (HttpContext.Session.GetInt32("UserId") == null)
             {
                 TempData["Error"] = "Please login to send message!";

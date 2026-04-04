@@ -1,4 +1,5 @@
 ﻿@model List<Ragnor_Fitness_Arena.Models.MembershipPlan>
+
 @if (TempData["Success"] != null)
 {
     <script>
@@ -13,17 +14,15 @@
     </script>
 }
 
-@{
-    Layout = null;
-}
-@if (TempData["Success"] != null)
-{
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            alert("@TempData["Success"]");
-        });
-    </script>
-}
+    
+ @*    @if (TempData["Success"] != null)
+    {
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                alert("@TempData["Success"]");
+            });
+        </script>
+    } *@
 <link rel="stylesheet" href="/User/css/style.css" />
 
 <!-- Hero Section Begin -->
@@ -324,8 +323,9 @@
         </div>
     </div>
 </section> *@
+@* //PRICING START *@
 
-<section class="pricing-section spad">
+@* <section class="pricing-section spad">
     <div class="container" id="plans">
 
         <div class="section-title">
@@ -362,6 +362,59 @@
 
                     </form>
 
+                </div>
+            }
+
+        </div>
+
+    </div>
+</section> *@
+<section class="pricing-section spad">
+    <div class="container" id="plans">
+
+        <div class="section-title">
+            <span>OUR PLAN</span>
+            <h2>Choose your pricing plan</h2>
+        </div>
+
+        <div class="plan-slider owl-carousel">
+
+            @if (Model != null && Model.Count > 0)
+            {
+                foreach (var plan in Model)
+                {
+                    <div class="ps-item">
+
+                        <h3>@plan.PlanName</h3>
+
+                        <div class="pi-price">
+                            <h2>₹ @plan.Price</h2>
+                            <span>@plan.Duration Months</span>
+                        </div>
+
+                        <ul>
+                            <li>@plan.Features</li>
+                        </ul>
+
+                        <form asp-controller="User"
+                              asp-action="JoinPlan"
+                              method="post">
+
+                            <input type="hidden" name="id" value="@plan.PlanId" />
+
+                            <button type="submit" class="primary-btn pricing-btn">
+                                JOIN NOW
+                            </button>
+
+                        </form>
+
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="text-center text-white">
+                    <h5>No Plans Available</h5>
                 </div>
             }
 
