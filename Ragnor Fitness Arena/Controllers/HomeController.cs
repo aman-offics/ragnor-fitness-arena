@@ -1,103 +1,103 @@
-using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using Ragnor_Fitness_Arena.Models;
+﻿    using System.Diagnostics;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Data.SqlClient;
+    using Microsoft.Extensions.Configuration;
+    using Ragnor_Fitness_Arena.Models;
 
-namespace Ragnor_Fitness_Arena.Controllers
-{
-    public class HomeController : Controller
+    namespace Ragnor_Fitness_Arena.Controllers
     {
-        //private readonly ILogger<HomeController> _logger;
-
-        //public HomeController(ILogger<HomeController> logger)
-        //{
-        //    _logger = logger;
-        //}
-
-
-        private readonly IConfiguration _configuration;
-
-        public HomeController(IConfiguration configuration)
+        public class HomeController : Controller
         {
-            _configuration = configuration;
-        }
-        // HOME
+            //private readonly ILogger<HomeController> _logger;
+
+            //public HomeController(ILogger<HomeController> logger)
+            //{
+            //    _logger = logger;
+            //}
 
 
-        // ABOUT
-        public IActionResult About()
-        {
-            return View("about");
-        }
+            private readonly IConfiguration _configuration;
 
-        // BLOG
-        public IActionResult Blog()
-        {
-            return View("blog");
-        }
-
-        // BLOG DETAILS
-        public IActionResult BlogDetails()
-        {
-            return View("blogdetails");
-        }
-
-        // BMI CALCULATOR
-        public IActionResult BmiCalculator()
-        {
-            return View("bmicalculator");
-        }
-
-        // CLASS TIMETABLE
-        public IActionResult ClassTimetable()
-        {
-            return View("classtimetable");
-        }
-
-        // CLASS DETAILS
-        public IActionResult ClassDetails()
-        {
-            return View("classdetails");
-        }
-
-        // CONTACT
-        public IActionResult Contact()
-        {
-            return View("contact");
-        }
-
-        // GALLERY
-        public IActionResult Gallery()
-        {
-            return View("gallery");
-        }
-
-        // SERVICE
+            public HomeController(IConfiguration configuration)
+            {
+                _configuration = configuration;
+            }
+            // HOME
 
 
-        // TEAM
-        public IActionResult Team()
-        {
-            return View("team");
-        }
+            // ABOUT
+            public IActionResult About()
+            {
+                return View("about");
+            }
 
-        // PRIVACY
-        public IActionResult Privacy()
-        {
-            return View("Privacy");
-        }
+            // BLOG
+            public IActionResult Blog()
+            {
+                return View("blog");
+            }
 
-        // 404 PAGE
-        public IActionResult Error404()
-        {
-            return View("Error404");
-        }
+            // BLOG DETAILS
+            public IActionResult BlogDetails()
+            {
+                return View("blogdetails");
+            }
 
-        public IActionResult Error()
-        {
-            return Content("Something went wrong. Please try again later.");
-        }
+            // BMI CALCULATOR
+            public IActionResult BmiCalculator()
+            {
+                return View("bmicalculator");
+            }
+
+            // CLASS TIMETABLE
+            public IActionResult ClassTimetable()
+            {
+                return View("classtimetable");
+            }
+
+            // CLASS DETAILS
+            public IActionResult ClassDetails()
+            {
+                return View("classdetails");
+            }
+
+            // CONTACT
+            public IActionResult Contact()
+            {
+                return View("contact");
+            }
+
+            // GALLERY
+            public IActionResult Gallery()
+            {
+                return View("gallery");
+            }
+
+            // SERVICE
+
+
+            // TEAM
+            public IActionResult Team()
+            {
+                return View("team");
+            }
+
+            // PRIVACY
+            public IActionResult Privacy()
+            {
+                return View("Privacy");
+            }
+
+            // 404 PAGE
+            public IActionResult Error404()
+            {
+                return View("Error404");
+            }
+
+            public IActionResult Error()
+            {
+                return Content("Something went wrong. Please try again later.");
+            }
         // DEFAULT ERROR
         //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         //public IActionResult Error()
@@ -108,36 +108,74 @@ namespace Ragnor_Fitness_Arena.Controllers
         //    });
         //}
 
+        //public IActionResult Index()
+        //{
+        //    List<MembershipPlan> plans = new List<MembershipPlan>();
+
+        //    string conStr = _configuration.GetConnectionString("DefaultConnection");
+
+        //    using (SqlConnection con = new SqlConnection(conStr))
+        //    {
+        //        string query = "SELECT PlanId, PlanName, Price, Duration, Features FROM MembershipPlans";
+        //        SqlCommand cmd = new SqlCommand(query, con);
+
+        //        con.Open();
+        //        SqlDataReader reader = cmd.ExecuteReader();
+
+        //        while (reader.Read())
+        //        {
+        //            plans.Add(new MembershipPlan
+        //            {
+        //                PlanId = (int)reader["PlanId"],
+        //                PlanName = reader["PlanName"].ToString(),
+        //                Price = (decimal)reader["Price"],
+        //                Duration = reader["Duration"].ToString(),
+        //                Features = reader["Features"].ToString()
+        //            });
+        //        }
+        //    }
+
+        //    return View(plans);
+        //}
+
         public IActionResult Index()
         {
             List<MembershipPlan> plans = new List<MembershipPlan>();
 
-            string conStr = _configuration.GetConnectionString("DefaultConnection");
-
-            using (SqlConnection con = new SqlConnection(conStr))
+            try
             {
-                string query = "SELECT PlanId, PlanName, Price, Duration, Features FROM MembershipPlans";
-                SqlCommand cmd = new SqlCommand(query, con);
+                string conStr = _configuration.GetConnectionString("DefaultConnection");
 
-                con.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.Read())
+                using (SqlConnection con = new SqlConnection(conStr))
                 {
-                    plans.Add(new MembershipPlan
+                    string query = "SELECT PlanId, PlanName, Price, Duration, Features FROM MembershipPlans";
+                    SqlCommand cmd = new SqlCommand(query, con);
+
+                    con.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
                     {
-                        PlanId = (int)reader["PlanId"],
-                        PlanName = reader["PlanName"].ToString(),
-                        Price = (decimal)reader["Price"],
-                        Duration = reader["Duration"].ToString(),
-                        Features = reader["Features"].ToString()
-                    });
+                        plans.Add(new MembershipPlan
+                        {
+                            PlanId = (int)reader["PlanId"],
+                            PlanName = reader["PlanName"].ToString(),
+                            Price = (decimal)reader["Price"],
+                            Duration = reader["Duration"].ToString(),
+                            Features = reader["Features"].ToString()
+                        });
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                // 💥 IMPORTANT: crash aagadha
+                Console.WriteLine("DB ERROR: " + ex.Message);
+                plans = new List<MembershipPlan>(); // empty
             }
 
             return View(plans);
         }
-
 
         //[HttpPost]
         //public IActionResult BookTrial(string FullName, string PhoneNumber, DateTime PreferredDate, string Message)
@@ -247,37 +285,37 @@ namespace Ragnor_Fitness_Arena.Controllers
         //}
 
         [HttpPost]
-        public IActionResult ContactSubmit(string Name, string Email, string Comment)
-        {
-            if (HttpContext.Session.GetInt32("UserId") == null)
+            public IActionResult ContactSubmit(string Name, string Email, string Comment)
             {
-                TempData["Error"] = "Please login to send message!";
+                if (HttpContext.Session.GetInt32("UserId") == null)
+                {
+                    TempData["Error"] = "Please login to send message!";
+                    return RedirectToAction("Contact");
+                }
+
+                string conStr = _configuration.GetConnectionString("DefaultConnection");
+
+                using (SqlConnection con = new SqlConnection(conStr))
+                {
+                    string query = @"INSERT INTO Contacts 
+                                    (Name, Email, Comment, CreatedAt, Status) 
+                                    VALUES 
+                                    (@n, @e, @c, @d, 'New')";
+                    SqlCommand cmd = new SqlCommand(query, con);
+
+                    cmd.Parameters.AddWithValue("@n", Name);
+                    cmd.Parameters.AddWithValue("@e", Email);
+                    //cmd.Parameters.AddWithValue("@w", Website);
+                    cmd.Parameters.AddWithValue("@c", Comment);
+                    cmd.Parameters.AddWithValue("@d", DateTime.Now);
+
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                }          
+
+                TempData["Success"] = "Message sent successfully!";
                 return RedirectToAction("Contact");
             }
-
-            string conStr = _configuration.GetConnectionString("DefaultConnection");
-
-            using (SqlConnection con = new SqlConnection(conStr))
-            {
-                string query = @"INSERT INTO Contacts 
-                                (Name, Email, Comment, CreatedAt, Status) 
-                                VALUES 
-                                (@n, @e, @c, @d, 'New')";
-                SqlCommand cmd = new SqlCommand(query, con);
-
-                cmd.Parameters.AddWithValue("@n", Name);
-                cmd.Parameters.AddWithValue("@e", Email);
-                //cmd.Parameters.AddWithValue("@w", Website);
-                cmd.Parameters.AddWithValue("@c", Comment);
-                cmd.Parameters.AddWithValue("@d", DateTime.Now);
-
-                con.Open();
-                cmd.ExecuteNonQuery();
-            }
-
-            TempData["Success"] = "Message sent successfully!";
-            return RedirectToAction("Contact");
         }
     }
-}
 
