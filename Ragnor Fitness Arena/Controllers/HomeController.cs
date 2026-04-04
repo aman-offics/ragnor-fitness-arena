@@ -247,37 +247,37 @@ namespace Ragnor_Fitness_Arena.Controllers
         //}
 
         [HttpPost]
-            public IActionResult ContactSubmit(string Name, string Email, string Comment)
+        public IActionResult ContactSubmit(string Name, string Email, string Comment)
+        {
+            if (HttpContext.Session.GetInt32("UserId") == null)
             {
-                if (HttpContext.Session.GetInt32("UserId") == null)
-                {
-                    TempData["Error"] = "Please login to send message!";
-                    return RedirectToAction("Contact");
-                }
-
-                string conStr = _configuration.GetConnectionString("DefaultConnection");
-
-                using (SqlConnection con = new SqlConnection(conStr))
-                {
-                    string query = @"INSERT INTO Contacts 
-(Name, Email, Comment, CreatedAt, Status) 
-VALUES 
-(@n, @e, @c, @d, 'New')";
-                    SqlCommand cmd = new SqlCommand(query, con);
-
-                    cmd.Parameters.AddWithValue("@n", Name);
-                    cmd.Parameters.AddWithValue("@e", Email);
-                    //cmd.Parameters.AddWithValue("@w", Website);
-                    cmd.Parameters.AddWithValue("@c", Comment);
-                    cmd.Parameters.AddWithValue("@d", DateTime.Now);
-
-                    con.Open();
-                    cmd.ExecuteNonQuery();
-                }
-
-                TempData["Success"] = "Message sent successfully!";
+                TempData["Error"] = "Please login to send message!";
                 return RedirectToAction("Contact");
             }
+
+            string conStr = _configuration.GetConnectionString("DefaultConnection");
+
+            using (SqlConnection con = new SqlConnection(conStr))
+            {
+                string query = @"INSERT INTO Contacts 
+                                (Name, Email, Comment, CreatedAt, Status) 
+                                VALUES 
+                                (@n, @e, @c, @d, 'New')";
+                SqlCommand cmd = new SqlCommand(query, con);
+
+                cmd.Parameters.AddWithValue("@n", Name);
+                cmd.Parameters.AddWithValue("@e", Email);
+                //cmd.Parameters.AddWithValue("@w", Website);
+                cmd.Parameters.AddWithValue("@c", Comment);
+                cmd.Parameters.AddWithValue("@d", DateTime.Now);
+
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+
+            TempData["Success"] = "Message sent successfully!";
+            return RedirectToAction("Contact");
         }
     }
 }
+
