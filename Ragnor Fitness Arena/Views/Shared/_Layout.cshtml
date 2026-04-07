@@ -229,7 +229,7 @@
     </div>
 
 
-    <div class="modal fade" id="trainerAppointmentModal" tabindex="-1">
+    <div class="modal fade" id="BookTrainer" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
 
@@ -240,7 +240,7 @@
 
                 <div class="modal-body">
 
-                    <form asp-controller="Home" asp-action="BookTrainerAppointment" method="post">
+                    <form asp-controller="Home" asp-action="BookTrainer" method="post">
 
                         <input type="text" name="FullName" class="form-control mb-2" placeholder="Full Name" required>
 
@@ -372,7 +372,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="trainerModal" tabindex="-1">
+   @*  <div class="modal fade" id="trainerModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
 
@@ -397,6 +397,42 @@
                         <input type="time" name="Time" class="form-control mb-2" required />
 
                         <button class="btn btn-warning w-100">Book</button>
+
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+    </div> *@
+
+    <div class="modal fade" id="trainerModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5>Book Trainer Appointment</h5>
+                </div>
+
+                <div class="modal-body">
+
+                    <form id="trainerForm">
+
+                        <input type="text" name="FullName" class="form-control mb-2" placeholder="Name" required />
+                        <input type="text" name="PhoneNumber" class="form-control mb-2" placeholder="Phone" required />
+
+                        <select name="TrainerName" class="form-control mb-2">
+                            <option>Aman</option>
+                            <option>Siva</option>
+                            <option>Abhi</option>
+                        </select>
+
+                        <input type="date" name="AppointmentDate" class="form-control mb-2" required />
+                        <input type="time" name="AppointmentTime" class="form-control mb-2" required />
+
+                        <textarea name="Message" class="form-control mb-2" placeholder="Message"></textarea>
+
+                        <button type="submit" class="btn btn-warning w-100">Book</button>
 
                     </form>
 
@@ -608,7 +644,7 @@
 
  @*        }); *@
  @*    </script> *@
-    <script>
+ @*    <script>
         function openTrainerModal(){
 
             var modalElement = document.getElementById('trainerAppointmentModal');
@@ -618,14 +654,50 @@
             modal.show();
 
         }
-    </script>
+    </script> *@
 
     <script>
+        function openTrainerModal() {
+            $('#trainerModal').modal('show');
+        }
+
+        document.getElementById("trainerForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            var formData = new FormData(this);
+
+            fetch('/Home/BookTrainerAppointment', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+
+                if (data === "SUCCESS") {
+
+                    alert("✅ Appointment Booked Successfully!");
+
+                    // ✅ Bootstrap 4 close
+                    $('#trainerModal').modal('hide');
+
+                    document.getElementById("trainerForm").reset();
+                }
+                else {
+                    alert("❌ Booking Failed");
+                }
+            })
+            .catch(error => {
+                alert("🔥 Error: " + error);
+            });
+        });
+    </script>
+
+ @*    <script>
         function openTrainerModal() {
             var modal = new bootstrap.Modal(document.getElementById('trainerModal'));
             modal.show();
         }
-    </script>
+    </script> *@
 
 </body>
 </html>

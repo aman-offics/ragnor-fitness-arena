@@ -175,7 +175,7 @@
     @* </section> *@
 
 <section class="pricing-section spad">
-    <div class="container">
+    <div class="container" id="plans">
 
         <div class="section-title">
             <span>OUR PLAN</span>
@@ -184,33 +184,42 @@
 
         <div class="plan-slider owl-carousel">
 
-            @foreach (var plan in Model)
+            @if (Model != null && Model.Count > 0)
             {
-                <div class="ps-item">
+                foreach (var plan in Model)
+                {
+                    <div class="ps-item">
 
-                    <h3>@plan.PlanName</h3>
+                        <h3>@plan.PlanName</h3>
 
-                    <div class="pi-price">
-                        <h2>₹ @plan.Price</h2>
-                        <span>@plan.Duration Months</span>
+                        <div class="pi-price">
+                            <h2>₹ @plan.Price</h2>
+                            <span>@plan.Duration Months</span>
+                        </div>
+
+                        <ul>
+                            <li>@plan.Features</li>
+                        </ul>
+
+                        <!-- ✅ FIXED FORM -->
+                        <form action="/User/JoinPlan" method="post">
+
+                            <input type="hidden" name="id" value="@plan.PlanId" />
+
+                            <button type="submit" class="primary-btn pricing-btn"
+                                    style="position:relative; z-index:999;">
+                                JOIN NOW
+                            </button>
+
+                        </form>
+
                     </div>
-
-                    <ul>
-                        <li>@plan.Features</li>
-                    </ul>
-
-                    <form asp-controller="User"
-                          asp-action="JoinPlan"
-                          method="post">
-
-                        <input type="hidden" name="id" value="@plan.PlanId" />
-
-                        <button type="submit" class="primary-btn pricing-btn">
-                            JOIN NOW
-                        </button>
-
-                    </form>
-
+                }
+            }
+            else
+            {
+                <div class="text-center text-white">
+                    <h5>No Plans Available</h5>
                 </div>
             }
 
@@ -223,26 +232,25 @@
 <script>
     $(document).ready(function () {
 
-        $(".pricing-section .plan-slider").owlCarousel({
-            items:3,
-            loop:true,
-            margin:30,
-            nav:true,
-            dots:false,
-            autoplay:true,
-            autoplayTimeout:3000,
+        $(".plan-slider").owlCarousel({
+            items: 3,
+            loop: true,
+            margin: 30,
+            nav: true,
+            dots: false,
+            autoplay: true,
+            autoplayTimeout: 3000,
 
-            navText:[
-                "<div class='slider-btn'><i class='fa fa-angle-left'></i></div>",
-                "<div class='slider-btn'><i class='fa fa-angle-right'></i></div>"
+            navText: [
+                "<span class='arrow-btn left'><i class='fa fa-angle-left'></i></span>",
+                "<span class='arrow-btn right'><i class='fa fa-angle-right'></i></span>"
             ],
 
-            responsive:{
-                0:{items:1},
-                768:{items:2},
-                992:{items:3}
+            responsive: {
+                0: { items: 1 },
+                768: { items: 2 },
+                992: { items: 3 }
             }
-
         });
 
     });

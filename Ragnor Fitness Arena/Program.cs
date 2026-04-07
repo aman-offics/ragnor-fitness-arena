@@ -1,42 +1,48 @@
 ﻿var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// 🔥 Add services
 builder.Services.AddControllersWithViews();
-//builder.Services.AddSession();
 
-
+// ✅ Session (IMPORTANT)
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
-// ✅ Move this ABOVE Build
+
+// ✅ Antiforgery (optional but ok)
 builder.Services.AddAntiforgery(options =>
 {
     options.SuppressXFrameOptionsHeader = true;
 });
 
-
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+
+// 🔥 ERROR HANDLING (ONLY ONCE)
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
 
+
+// 🔥 MIDDLEWARE ORDER IMPORTANT
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseSession();
+
+app.UseSession();     // ✅ MUST BEFORE Authorization
 app.UseAuthorization();
 
-app.UseExceptionHandler("/Home/Error");
-app.UseStatusCodePagesWithReExecute("/Home/Error");
-app.UseStatusCodePages("text/plain", "Error occurred");
+
+// ❌ REMOVE DUPLICATE ERROR HANDLERS
+// (you had 3 — removed now)
+
+
+// 🔥 ROUTING
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
