@@ -1,7 +1,19 @@
-﻿@using Ragnor_Fitness_Arena.Models.ViewModels
+﻿@if (TempData["Message"] != null)
+{
+    <script>
+        window.onload = function () {
+            alert("@TempData["Message"]");
+        };
+    </script>
+}
+
+
+@using Ragnor_Fitness_Arena.Models.ViewModels
 @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
+
+
 
 <h2>Membership List</h2>
 

@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
+using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Configuration;
 using Ragnor_Fitness_Arena.Models;
 
@@ -22,34 +22,65 @@ public class UserController : Controller
     public IActionResult Login(string Email, string Password)
     {
         string conStr = _configuration.GetConnectionString("DefaultConnection");
+        //return Content(conStr);
 
-        using (SqlConnection con = new SqlConnection(conStr))
+        using (SqliteConnection con = new SqliteConnection(conStr))
         {
             string query = "SELECT UserId, FullName FROM Users WHERE Email=@e AND Password=@p";
-            SqlCommand cmd = new SqlCommand(query, con);
+
+            SqliteCommand cmd = new SqliteCommand(query, con);
 
             cmd.Parameters.AddWithValue("@e", Email);
             cmd.Parameters.AddWithValue("@p", Password);
 
             con.Open();
 
-            SqlDataReader reader = cmd.ExecuteReader();
+            SqliteDataReader reader = cmd.ExecuteReader();
 
             if (reader.Read())
             {
-                int userIdFromDB = (int)reader["UserId"];
-                string fullName = reader["FullName"] == DBNull.Value ? "" : reader["FullName"].ToString();
+                //int userIdFromDB = (int)reader["UserId"];
+                int userIdFromDB = Convert.ToInt32(reader["UserId"]);
 
+                string fullName = reader["FullName"] == DBNull.Value
+                                    ? ""
+                                    : reader["FullName"].ToString();
 
-                // 🔥 STORE SESSION HERE
+                // ✅ CLOSE READER FIRST
+                reader.Close();
+
+                // ✅ STORE SESSION
                 HttpContext.Session.SetInt32("UserId", userIdFromDB);
                 HttpContext.Session.SetString("UserName", fullName);
 
+                // ✅ GET ACTIVE MEMBERSHIP COUNT
+                string countQuery = @"SELECT COUNT(*) 
+                                  FROM UserMemberships 
+                                  WHERE UserId = @UserId 
+                                  AND ExpiryDate > datetime('now')";
+
+                SqliteCommand countCmd = new SqliteCommand(countQuery, con);
+
+                countCmd.Parameters.AddWithValue("@UserId", userIdFromDB);
+
+                //int membershipCount = (int)countCmd.ExecuteScalar();
+                int membershipCount = Convert.ToInt32(countCmd.ExecuteScalar());
+
+                // ✅ STORE MEMBERSHIP COUNT SESSION
+                HttpContext.Session.SetInt32("MembershipCount", membershipCount);
+
+                //TempData["Success"] = "Login Successful!";
+
                 return RedirectToAction("Index", "Home");
             }
+
+            reader.Close();
         }
 
+     
+        TempData["Error"] = "Invalid Email or Password!";
         return RedirectToAction("Index", "Home");
+
     }
 
 
@@ -64,11 +95,11 @@ public class UserController : Controller
     {
         string conStr = _configuration.GetConnectionString("DefaultConnection");
 
-        using (SqlConnection con = new SqlConnection(conStr))
+        using (SqliteConnection con = new SqliteConnection(conStr))
         {
             string query = "INSERT INTO Users (FullName, Email, Password) VALUES (@n, @e, @p)";
 
-            SqlCommand cmd = new SqlCommand(query, con);
+            SqliteCommand cmd = new SqliteCommand(query, con);
 
             cmd.Parameters.AddWithValue("@n", FullName);
             cmd.Parameters.AddWithValue("@e", Email);
@@ -100,43 +131,64 @@ public class UserController : Controller
     [HttpPost]
     public IActionResult JoinPlan(int id)
     {
-
         int? userId = HttpContext.Session.GetInt32("UserId");
 
-      
+        // 🔥 CHECK LOGIN
         if (userId == null)
         {
-        
             TempData["Message"] = "Please login first!";
             return RedirectToAction("Index", "Home");
-
-
         }
 
         string conStr = _configuration.GetConnectionString("DefaultConnection");
 
-        using (SqlConnection con = new SqlConnection(conStr))
+        using (SqliteConnection con = new SqliteConnection(conStr))
         {
             con.Open();
 
-            // 🔥 CHECK IF USER ALREADY HAS THIS PLAN
-            // 🔥 CHECK IF USER ALREADY HAS ANY ACTIVE PLAN
-            SqlCommand checkCmd = new SqlCommand(
-                "SELECT COUNT(*) FROM UserMemberships WHERE UserId = @UserId AND ExpiryDate > GETDATE()",
+            // 🔥 CHECK ACTIVE PLAN COUNT
+            SqliteCommand checkCmd = new SqliteCommand(
+                @"SELECT COUNT(*) 
+              FROM UserMemberships 
+              WHERE UserId = @UserId 
+              AND ExpiryDate > datetime('now')",
                 con);
 
             checkCmd.Parameters.AddWithValue("@UserId", userId.Value);
 
-            int activePlan = (int)checkCmd.ExecuteScalar();
+            //int activePlans = (int)checkCmd.ExecuteScalar();
+            int activePlans = Convert.ToInt32(checkCmd.ExecuteScalar());
 
-            if (activePlan > 0)
+            // 🔥 MAX 3 ACTIVE PLANS
+            if (activePlans >= 3)
             {
-                TempData["Message"] = "You already have an active membership!";
-                return RedirectToAction("MyMembership");
+                TempData["Message"] = "You can only have 3 active plans at the same time!";
+                return RedirectToAction("MyMembership", "User");
+            }
+
+            // 🔥 CHECK SAME PLAN ALREADY ACTIVE
+            SqliteCommand duplicateCmd = new SqliteCommand(
+                @"SELECT COUNT(*) 
+              FROM UserMemberships 
+              WHERE UserId = @UserId 
+              AND PlanId = @PlanId
+              AND ExpiryDate > datetime('now')",
+                con);
+
+            duplicateCmd.Parameters.AddWithValue("@UserId", userId.Value);
+            duplicateCmd.Parameters.AddWithValue("@PlanId", id);
+
+            //int samePlan = (int)duplicateCmd.ExecuteScalar();
+            int samePlan = Convert.ToInt32(duplicateCmd.ExecuteScalar());
+
+            if (samePlan > 0)
+            {
+                TempData["Message"] = "You already joined this plan!";
+                return RedirectToAction("MyMembership", "User");
             }
 
             // 🔥 GET PLAN DURATION
-            SqlCommand cmdPlan = new SqlCommand(
+            SqliteCommand cmdPlan = new SqliteCommand(
                 "SELECT Duration FROM MembershipPlans WHERE PlanId = @PlanId",
                 con);
 
@@ -156,7 +208,7 @@ public class UserController : Controller
             DateTime expiryDate = startDate.AddMonths(durationMonths);
 
             // 🔥 INSERT MEMBERSHIP
-            SqlCommand cmdInsert = new SqlCommand(
+            SqliteCommand cmdInsert = new SqliteCommand(
                 @"INSERT INTO UserMemberships 
               (UserId, PlanId, StartDate, ExpiryDate) 
               VALUES 
@@ -172,7 +224,7 @@ public class UserController : Controller
         }
 
         TempData["Message"] = "Plan Joined Successfully!";
-        return RedirectToAction("MyMembership","User");
+        return RedirectToAction("MyMembership", "User");
     }
 
 
@@ -187,10 +239,10 @@ public class UserController : Controller
             return RedirectToAction("Index", "Home");
 
         string conStr = _configuration.GetConnectionString("DefaultConnection");
-        using (SqlConnection con = new SqlConnection(conStr))
+        using (SqliteConnection con = new SqliteConnection(conStr))
         {
             string deleteQuery = "DELETE FROM UserMemberships WHERE UserId=@uid";
-            SqlCommand cmd = new SqlCommand(deleteQuery, con);
+            SqliteCommand cmd = new SqliteCommand(deleteQuery, con);
             cmd.Parameters.AddWithValue("@uid", userId);
 
             con.Open();
@@ -216,7 +268,7 @@ public class UserController : Controller
 
         string conStr = _configuration.GetConnectionString("DefaultConnection");
 
-        using (SqlConnection con = new SqlConnection(conStr))
+        using (SqliteConnection con = new SqliteConnection(conStr))
         {
             string query = @"SELECT m.PlanName,
                                 m.Price,
@@ -227,11 +279,11 @@ public class UserController : Controller
                          JOIN MembershipPlans m ON um.PlanId = m.PlanId
                          WHERE um.UserId = @uid";
 
-            SqlCommand cmd = new SqlCommand(query, con);
+            SqliteCommand cmd = new SqliteCommand(query, con);
             cmd.Parameters.AddWithValue("@uid", userId.Value);
 
             con.Open();
-            SqlDataReader reader = cmd.ExecuteReader();
+            SqliteDataReader reader = cmd.ExecuteReader();
 
             while (reader.Read())
             {

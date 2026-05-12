@@ -27,6 +27,8 @@ CREATE TABLE Users
 
 SELECT * FROM Users
 
+
+
 INSERT INTO Users (FullName, Email, Password)
 VALUES 
 ('Aman Kumar', 'aman@gmail.com', '123'),
@@ -152,7 +154,6 @@ CREATE TABLE Contacts (
     Id INT IDENTITY PRIMARY KEY,
     Name NVARCHAR(100),
     Email NVARCHAR(100),
-	
     Comment NVARCHAR(MAX),
     CreatedAt DATETIME
 );
@@ -161,7 +162,7 @@ ALTER TABLE Contacts
 ADD Status NVARCHAR(20) DEFAULT 'New'
 	
 
-select Status from Contacts
+select * from Contacts
 
 
 drop table Contacts

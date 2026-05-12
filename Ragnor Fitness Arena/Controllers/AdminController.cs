@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
+using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Configuration;
 using Ragnor_Fitness_Arena.Models;
 using Ragnor_Fitness_Arena.Models.ViewModels;
@@ -38,12 +38,12 @@ namespace Ragnor_Fitness_Arena.Controllers
 
         //    string conStr = _configuration.GetConnectionString("DefaultConnection");
         //    int userCount = 0;
-        //    using (SqlConnection conn = new SqlConnection(conStr))
+        //    using (SqliteConnection conn = new SqliteConnection(conStr))
         //    {
         //        string query = "SELECT COUNT(*) FROM Users";
-        //        SqlCommand cmd = new SqlCommand(query, conn);
+        //        SqliteCommand cmd = new SqliteCommand(query, conn);
         //        conn.Open();
-        //        userCount = (int)cmd.ExecuteScalar();
+        //        userCount = Convert.ToInt32(cmd.ExecuteScalar());
         //    }
         //    ViewBag.UserCount = userCount;
         //    return View();
@@ -53,45 +53,52 @@ namespace Ragnor_Fitness_Arena.Controllers
         {
             string conStr = _configuration.GetConnectionString("DefaultConnection");
 
-            using (SqlConnection con = new SqlConnection(conStr))
+            using (SqliteConnection con = new SqliteConnection(conStr))
             {
                 con.Open();
 
                 // Total Users
-                SqlCommand cmd1 = new SqlCommand("SELECT COUNT(*) FROM Users", con);
-                ViewBag.TotalUsers = (int)cmd1.ExecuteScalar();
+                SqliteCommand cmd1 = new SqliteCommand("SELECT COUNT(*) FROM Users", con);
+                ViewBag.TotalUsers = Convert.ToInt32(cmd1.ExecuteScalar());
 
                 // Total Plans
-                SqlCommand cmd2 = new SqlCommand("SELECT COUNT(*) FROM MembershipPlans", con);
-                ViewBag.TotalPlans = (int)cmd2.ExecuteScalar();
+                SqliteCommand cmd2 = new SqliteCommand("SELECT COUNT(*) FROM MembershipPlans", con);
+                //ViewBag.TotalPlans = (int)cmd2.ExecuteScalar();
+                ViewBag.TotalPlans = Convert.ToInt32(cmd2.ExecuteScalar());
 
                 // Total Contacts
-                SqlCommand cmd3 = new SqlCommand("SELECT COUNT(*) FROM Contacts", con);
-                ViewBag.TotalContacts = (int)cmd3.ExecuteScalar();
+                SqliteCommand cmd3 = new SqliteCommand("SELECT COUNT(*) FROM Contacts", con);
+                //ViewBag.TotalContacts = (int)cmd3.ExecuteScalar();
+                ViewBag.TotalContacts = Convert.ToInt32(cmd3.ExecuteScalar());
 
                 // New Messages
-                SqlCommand cmd4 = new SqlCommand("SELECT COUNT(*) FROM Contacts WHERE Status='New'", con);
-                ViewBag.NewMessages = (int)cmd4.ExecuteScalar();
+                SqliteCommand cmd4 = new SqliteCommand("SELECT COUNT(*) FROM Contacts WHERE Status='New'", con);
+                //ViewBag.NewMessages = (int)cmd4.ExecuteScalar();
+                ViewBag.NewMessages = Convert.ToInt32(cmd4.ExecuteScalar());
 
                 // Active Memberships
-                SqlCommand cmd5 = new SqlCommand("SELECT COUNT(*) FROM UserMemberships WHERE ExpiryDate > GETDATE()", con);
-                ViewBag.ActiveMemberships = (int)cmd5.ExecuteScalar();
-
+                SqliteCommand cmd5 = new SqliteCommand("SELECT COUNT(*) FROM UserMemberships WHERE ExpiryDate > datetime('now')", con);
+                //ViewBag.ActiveMemberships = (int)cmd5.ExecuteScalar();
+                ViewBag.ActiveMemberships = Convert.ToInt32(cmd5.ExecuteScalar());
                 // 🔥 TOTAL TRIALS
-                SqlCommand cmd6 = new SqlCommand("SELECT COUNT(*) FROM TrialBookings", con);
-                ViewBag.TotalTrials = (int)cmd6.ExecuteScalar();
+                SqliteCommand cmd6 = new SqliteCommand("SELECT COUNT(*) FROM TrialBookings", con);
+                //ViewBag.TotalTrials = (int)cmd6.ExecuteScalar();
+                ViewBag.TotalTrials = Convert.ToInt32(cmd6.ExecuteScalar());
 
                 // 🔥 PENDING TRIALS
-                SqlCommand cmd7 = new SqlCommand("SELECT COUNT(*) FROM TrialBookings WHERE Status='Pending'", con);
-                ViewBag.PendingTrials = (int)cmd7.ExecuteScalar();
+                SqliteCommand cmd7 = new SqliteCommand("SELECT COUNT(*) FROM TrialBookings WHERE Status='Pending'", con);
+                //ViewBag.PendingTrials = (int)cmd7.ExecuteScalar();
+                ViewBag.PendingTrials = Convert.ToInt32(cmd7.ExecuteScalar());
 
                 // 🔥 TOTAL APPOINTMENTS
-                SqlCommand cmd8 = new SqlCommand("SELECT COUNT(*) FROM TrainerAppointments", con);
-                ViewBag.TotalAppointments = (int)cmd8.ExecuteScalar();
+                SqliteCommand cmd8 = new SqliteCommand("SELECT COUNT(*) FROM TrainerAppointments", con);
+                //ViewBag.TotalAppointments = (int)cmd8.ExecuteScalar();
+                ViewBag.TotalAppointments = Convert.ToInt32(cmd8.ExecuteScalar());
 
                 // 🔥 PENDING APPOINTMENTS
-                SqlCommand cmd9 = new SqlCommand("SELECT COUNT(*) FROM TrainerAppointments WHERE Status='Pending'", con);
-                ViewBag.PendingAppointments = (int)cmd9.ExecuteScalar();
+                SqliteCommand cmd9 = new SqliteCommand("SELECT COUNT(*) FROM TrainerAppointments WHERE Status='Pending'", con);
+                //ViewBag.PendingAppointments = (int)cmd9.ExecuteScalar();
+                ViewBag.PendingAppointments = Convert.ToInt32(cmd9.ExecuteScalar());
             }
 
             return View();
@@ -102,16 +109,16 @@ namespace Ragnor_Fitness_Arena.Controllers
         {
             string conStr = _configuration.GetConnectionString("DefaultConnection");
 
-            using (SqlConnection con = new SqlConnection(conStr))
+            using (SqliteConnection con = new SqliteConnection(conStr))
             {
                 string query = "SELECT COUNT(*) FROM Admins WHERE Username=@u AND Password=@p";
-                SqlCommand cmd = new SqlCommand(query, con);
+                SqliteCommand cmd = new SqliteCommand(query, con);
 
                 cmd.Parameters.AddWithValue("@u", username);
                 cmd.Parameters.AddWithValue("@p", password);
 
                 con.Open();
-                int count = (int)cmd.ExecuteScalar();
+                int count = Convert.ToInt32(cmd.ExecuteScalar());
 
                 if (count == 1)
                 {
@@ -143,13 +150,13 @@ namespace Ragnor_Fitness_Arena.Controllers
             string conStr = _configuration.GetConnectionString("DefaultConnection");
             List<string[]> users = new List<string[]>();
 
-            using (SqlConnection con = new SqlConnection(conStr))
+            using (SqliteConnection con = new SqliteConnection(conStr))
             {
                 string query = "SELECT UserId, FullName, Email, CreatedAt FROM Users";
-                SqlCommand cmd = new SqlCommand(query, con);
+                SqliteCommand cmd = new SqliteCommand(query, con);
 
                 con.Open();
-                SqlDataReader dr = cmd.ExecuteReader();
+                SqliteDataReader dr = cmd.ExecuteReader();
 
                 while (dr.Read())
                 {
@@ -188,10 +195,10 @@ namespace Ragnor_Fitness_Arena.Controllers
 
             string conStr = _configuration.GetConnectionString("DefaultConnection");
 
-            using (SqlConnection con = new SqlConnection(conStr))
+            using (SqliteConnection con = new SqliteConnection(conStr))
             {
                 string query = "INSERT INTO Users (FullName, Email, Password) VALUES (@f, @e, @p)";
-                SqlCommand cmd = new SqlCommand(query, con);
+                SqliteCommand cmd = new SqliteCommand(query, con);
 
                 cmd.Parameters.AddWithValue("@f", fullname);
                 cmd.Parameters.AddWithValue("@p", password);
@@ -212,10 +219,10 @@ namespace Ragnor_Fitness_Arena.Controllers
 
             string conStr = _configuration.GetConnectionString("DefaultConnection");
 
-            using (SqlConnection con = new SqlConnection(conStr))
+            using (SqliteConnection con = new SqliteConnection(conStr))
             {
                 string query = "DELETE FROM Users WHERE UserId = @id";
-                SqlCommand cmd = new SqlCommand(query, con);
+                SqliteCommand cmd = new SqliteCommand(query, con);
 
                 cmd.Parameters.AddWithValue("@id", id);
 
@@ -238,15 +245,15 @@ namespace Ragnor_Fitness_Arena.Controllers
             string fullname = "";
             string email = "";
 
-            using (SqlConnection con = new SqlConnection(conStr))
+            using (SqliteConnection con = new SqliteConnection(conStr))
             {
                 string query = "SELECT FullName, Email FROM Users WHERE UserId = @id";
-                SqlCommand cmd = new SqlCommand(query, con);
+                SqliteCommand cmd = new SqliteCommand(query, con);
 
                 cmd.Parameters.AddWithValue("@id", id);
 
                 con.Open();
-                SqlDataReader dr = cmd.ExecuteReader();
+                SqliteDataReader dr = cmd.ExecuteReader();
 
                 if (dr.Read())
                 {
@@ -272,10 +279,10 @@ namespace Ragnor_Fitness_Arena.Controllers
 
             string conStr = _configuration.GetConnectionString("DefaultConnection");
 
-            using (SqlConnection con = new SqlConnection(conStr))
+            using (SqliteConnection con = new SqliteConnection(conStr))
             {
                 string query = "UPDATE Users SET FullName=@f, Email=@e WHERE UserId=@id";
-                SqlCommand cmd = new SqlCommand(query, con);
+                SqliteCommand cmd = new SqliteCommand(query, con);
 
                 cmd.Parameters.AddWithValue("@f", fullname);
                 cmd.Parameters.AddWithValue("@e", email);
@@ -300,21 +307,23 @@ namespace Ragnor_Fitness_Arena.Controllers
 
             string conStr = _configuration.GetConnectionString("DefaultConnection");
 
-            using (SqlConnection con = new SqlConnection(conStr))
+            using (SqliteConnection con = new SqliteConnection(conStr))
             {
                 string query = "SELECT * FROM MembershipPlans";
-                SqlCommand cmd = new SqlCommand(query, con);
+                SqliteCommand cmd = new SqliteCommand(query, con);
 
                 con.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
+                SqliteDataReader reader = cmd.ExecuteReader();
 
                 while (reader.Read())
                 {
                     plans.Add(new MembershipPlan
                     {
-                        PlanId = (int)reader["PlanId"],
+                        PlanId = Convert.ToInt32(reader["PlanId"]),
+                        Price = Convert.ToDecimal(reader["Price"]),
+                        //PlanId = (int)reader["PlanId"],
                         PlanName = reader["PlanName"].ToString(),
-                        Price = (decimal)reader["Price"],
+                        //Price = (decimal)reader["Price"],
                         Duration = reader["Duration"].ToString(),
                         Features = reader["Features"].ToString()
                     });
@@ -335,11 +344,11 @@ namespace Ragnor_Fitness_Arena.Controllers
 
             string conStr = _configuration.GetConnectionString("DefaultConnection");
 
-            using (SqlConnection con = new SqlConnection(conStr))
+            using (SqliteConnection con = new SqliteConnection(conStr))
             {
                 string query = "INSERT INTO MembershipPlans (PlanName, Price, Duration, Features) VALUES (@n, @p, @d, @f)";
 
-                SqlCommand cmd = new SqlCommand(query, con);
+                SqliteCommand cmd = new SqliteCommand(query, con);
 
                 cmd.Parameters.AddWithValue("@n", plan.PlanName);
                 cmd.Parameters.AddWithValue("@p", plan.Price);
@@ -353,7 +362,7 @@ namespace Ragnor_Fitness_Arena.Controllers
             return RedirectToAction("Plans");
         }
 
-        public IActionResult MembershipList(string search, string status)
+        public IActionResult MymbershipList(string search, string status)
         {
             if (HttpContext.Session.GetString("AdminLogin") == null)
             {
@@ -363,7 +372,7 @@ namespace Ragnor_Fitness_Arena.Controllers
             List<AdminMembershipVM> list = new List<AdminMembershipVM>();
             string conStr = _configuration.GetConnectionString("DefaultConnection");
 
-            using (SqlConnection con = new SqlConnection(conStr))
+            using (SqliteConnection con = new SqliteConnection(conStr))
             {
                 string query = @"SELECT u.FullName, u.Email, 
                          p.PlanName, um.StartDate, um.ExpiryDate, um.Id
@@ -380,18 +389,18 @@ namespace Ragnor_Fitness_Arena.Controllers
                 if (!string.IsNullOrEmpty(status))
                 {
                     if (status == "Active")
-                        query += " AND um.ExpiryDate > GETDATE()";
+                        query += " AND um.ExpiryDate > datetime('now')";
                     else if (status == "Expired")
-                        query += " AND um.ExpiryDate <= GETDATE()";
+                        query += " AND um.ExpiryDate <= datetime('now')";
                 }
 
-                SqlCommand cmd = new SqlCommand(query, con);
+                SqliteCommand cmd = new SqliteCommand(query, con);
 
                 if (!string.IsNullOrEmpty(search))
                     cmd.Parameters.AddWithValue("@search", "%" + search + "%");
 
                 con.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
+                SqliteDataReader reader = cmd.ExecuteReader();
 
                 while (reader.Read())
                 {
@@ -422,10 +431,10 @@ namespace Ragnor_Fitness_Arena.Controllers
 
             string conStr = _configuration.GetConnectionString("DefaultConnection");
 
-            using (SqlConnection con = new SqlConnection(conStr))
+            using (SqliteConnection con = new SqliteConnection(conStr))
             {
                 string query = "DELETE FROM UserMemberships WHERE Id = @id";
-                SqlCommand cmd = new SqlCommand(query, con);
+                SqliteCommand cmd = new SqliteCommand(query, con);
                 cmd.Parameters.AddWithValue("@id", id);
 
                 con.Open();
@@ -446,28 +455,33 @@ namespace Ragnor_Fitness_Arena.Controllers
 
             string conStr = _configuration.GetConnectionString("DefaultConnection");
 
-            using (SqlConnection con = new SqlConnection(conStr))
+            using (SqliteConnection con = new SqliteConnection(conStr))
             {
                 string query = "SELECT * FROM TrialBookings ORDER BY CreatedAt DESC";
-                SqlCommand cmd = new SqlCommand(query, con);
+                SqliteCommand cmd = new SqliteCommand(query, con);
 
                 con.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
+                SqliteDataReader reader = cmd.ExecuteReader();
 
                 while (reader.Read())
                 {
 
                     bookings.Add(new TrialBooking
                     {
-                        Id = (int)reader["Id"],
+                        //Id = (int)reader["Id"],
+                        Id = Convert.ToInt32(reader["Id"]),
                         FullName = reader["FullName"].ToString(),
                         PhoneNumber = reader["PhoneNumber"].ToString(),
                         PreferredDate = Convert.ToDateTime(reader["PreferredDate"]),
                         Message = reader["Message"].ToString(),
-                        CreatedAt = Convert.ToDateTime(reader["CreatedAt"]),
+                        //CreatedAt = Convert.ToDateTime(reader["CreatedAt"]),
+                        CreatedAt = reader["CreatedAt"] != DBNull.Value
+    ? Convert.ToDateTime(reader["CreatedAt"])
+    : DateTime.Now,
                         Status = reader["Status"].ToString()
                     });
                 }
+
             }
 
             return View(bookings);
@@ -482,7 +496,7 @@ namespace Ragnor_Fitness_Arena.Controllers
 
             string conStr = _configuration.GetConnectionString("DefaultConnection");
 
-            using (SqlConnection con = new SqlConnection(conStr))
+            using (SqliteConnection con = new SqliteConnection(conStr))
             {
                 con.Open();
 
@@ -494,7 +508,7 @@ namespace Ragnor_Fitness_Arena.Controllers
         END
         WHERE Id = @id";
 
-                SqlCommand cmd = new SqlCommand(query, con);
+                SqliteCommand cmd = new SqliteCommand(query, con);
                 cmd.Parameters.AddWithValue("@id", id);
 
                 cmd.ExecuteNonQuery();
@@ -514,7 +528,7 @@ namespace Ragnor_Fitness_Arena.Controllers
 
             List<string[]> appointments = new List<string[]>();
 
-            using (SqlConnection con = new SqlConnection(conStr))
+            using (SqliteConnection con = new SqliteConnection(conStr))
             {
                 string query = "SELECT * FROM TrainerAppointments";
 
@@ -525,7 +539,7 @@ namespace Ragnor_Fitness_Arena.Controllers
 
                 query += " ORDER BY CreatedAt DESC";
 
-                SqlCommand cmd = new SqlCommand(query, con);
+                SqliteCommand cmd = new SqliteCommand(query, con);
 
                 if (!string.IsNullOrEmpty(search))
                 {
@@ -533,7 +547,7 @@ namespace Ragnor_Fitness_Arena.Controllers
                 }
 
                 con.Open();
-                SqlDataReader dr = cmd.ExecuteReader();
+                SqliteDataReader dr = cmd.ExecuteReader();
 
                 while (dr.Read())
                 {
@@ -565,11 +579,11 @@ namespace Ragnor_Fitness_Arena.Controllers
 
             string conStr = _configuration.GetConnectionString("DefaultConnection");
 
-            using (SqlConnection con = new SqlConnection(conStr))
+            using (SqliteConnection con = new SqliteConnection(conStr))
             {
                 string query = "UPDATE TrainerAppointments SET Status=@status WHERE Id=@id";
 
-                SqlCommand cmd = new SqlCommand(query, con);
+                SqliteCommand cmd = new SqliteCommand(query, con);
 
                 cmd.Parameters.AddWithValue("@status", status);
                 cmd.Parameters.AddWithValue("@id", id);
@@ -585,23 +599,23 @@ namespace Ragnor_Fitness_Arena.Controllers
         {
             string conStr = _configuration.GetConnectionString("DefaultConnection");
 
-            using (SqlConnection con = new SqlConnection(conStr))
+            using (SqliteConnection con = new SqliteConnection(conStr))
             {
                 con.Open();
 
-                SqlTransaction tran = con.BeginTransaction();
+                SqliteTransaction tran = con.BeginTransaction();
 
                 try
                 {
                     // Step 1: Delete from UserMemberships
                     string q1 = "DELETE FROM UserMemberships WHERE PlanId=@id";
-                    SqlCommand cmd1 = new SqlCommand(q1, con, tran);
+                    SqliteCommand cmd1 = new SqliteCommand(q1, con, tran);
                     cmd1.Parameters.AddWithValue("@id", id);
                     cmd1.ExecuteNonQuery();
 
                     // Step 2: Delete from MembershipPlans
                     string q2 = "DELETE FROM MembershipPlans WHERE PlanId=@id";
-                    SqlCommand cmd2 = new SqlCommand(q2, con, tran);
+                    SqliteCommand cmd2 = new SqliteCommand(q2, con, tran);
                     cmd2.Parameters.AddWithValue("@id", id);
                     cmd2.ExecuteNonQuery();
 
@@ -625,21 +639,23 @@ namespace Ragnor_Fitness_Arena.Controllers
 
             MembershipPlan plan = new MembershipPlan();
 
-            using (SqlConnection con = new SqlConnection(conStr))
+            using (SqliteConnection con = new SqliteConnection(conStr))
             {
                 string query = "SELECT * FROM MembershipPlans WHERE PlanId=@id";
 
-                SqlCommand cmd = new SqlCommand(query, con);
+                SqliteCommand cmd = new SqliteCommand(query, con);
                 cmd.Parameters.AddWithValue("@id", id);
 
                 con.Open();
-                SqlDataReader dr = cmd.ExecuteReader();
+                SqliteDataReader dr = cmd.ExecuteReader();
 
                 if (dr.Read())
                 {
-                    plan.PlanId = (int)dr["PlanId"];
+                    plan.PlanId = Convert.ToInt32(dr["PlanId"]);
+                    plan.Price = Convert.ToDecimal(dr["Price"]);
+                    //plan.PlanId = (int)dr["PlanId"];
                     plan.PlanName = dr["PlanName"].ToString();
-                    plan.Price = (decimal)dr["Price"];
+                    //plan.Price = (decimal)dr["Price"];
                     plan.Duration = dr["Duration"].ToString();
                     plan.Features = dr["Features"].ToString();
                 }
@@ -653,13 +669,13 @@ namespace Ragnor_Fitness_Arena.Controllers
         {
             string conStr = _configuration.GetConnectionString("DefaultConnection");
 
-            using (SqlConnection con = new SqlConnection(conStr))
+            using (SqliteConnection con = new SqliteConnection(conStr))
             {
                 string query = @"UPDATE MembershipPlans 
                          SET PlanName=@n, Price=@p, Duration=@d, Features=@f
                          WHERE PlanId=@id";
 
-                SqlCommand cmd = new SqlCommand(query, con);
+                SqliteCommand cmd = new SqliteCommand(query, con);
 
                 cmd.Parameters.AddWithValue("@n", plan.PlanName);
                 cmd.Parameters.AddWithValue("@p", plan.Price);
@@ -684,7 +700,7 @@ namespace Ragnor_Fitness_Arena.Controllers
 
             string conStr = _configuration.GetConnectionString("DefaultConnection");
 
-            using (SqlConnection con = new SqlConnection(conStr))
+            using (SqliteConnection con = new SqliteConnection(conStr))
             {
                 string query = "SELECT * FROM Contacts WHERE 1=1";
 
@@ -696,7 +712,7 @@ namespace Ragnor_Fitness_Arena.Controllers
 
                 query += " ORDER BY CreatedAt DESC";
 
-                SqlCommand cmd = new SqlCommand(query, con);
+                SqliteCommand cmd = new SqliteCommand(query, con);
 
                 if (!string.IsNullOrEmpty(search))
                     cmd.Parameters.AddWithValue("@search", "%" + search + "%");
@@ -705,13 +721,14 @@ namespace Ragnor_Fitness_Arena.Controllers
                     cmd.Parameters.AddWithValue("@status", status);
 
                 con.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
+                SqliteDataReader reader = cmd.ExecuteReader();
 
                 while (reader.Read())
                 {
                     contacts.Add(new Contact
                     {
-                        Id = (int)reader["Id"],
+                        Id = Convert.ToInt32(reader["Id"]),
+                        //Id = (int)reader["Id"],
                         Name = reader["Name"].ToString(),
                         Email = reader["Email"].ToString(),
                       
@@ -741,11 +758,11 @@ namespace Ragnor_Fitness_Arena.Controllers
         {
             string conStr = _configuration.GetConnectionString("DefaultConnection");
 
-            using (SqlConnection con = new SqlConnection(conStr))
+            using (SqliteConnection con = new SqliteConnection(conStr))
             {
                 string query = "UPDATE Contacts SET Status='Seen' WHERE Id=@id";
 
-                SqlCommand cmd = new SqlCommand(query, con);
+                SqliteCommand cmd = new SqliteCommand(query, con);
                 cmd.Parameters.AddWithValue("@id", id);
 
                 con.Open();
@@ -759,11 +776,11 @@ namespace Ragnor_Fitness_Arena.Controllers
         {
             string conStr = _configuration.GetConnectionString("DefaultConnection");
 
-            using (SqlConnection con = new SqlConnection(conStr))
+            using (SqliteConnection con = new SqliteConnection(conStr))
             {
                 string query = "DELETE FROM Contacts WHERE Id=@id";
 
-                SqlCommand cmd = new SqlCommand(query, con);
+                SqliteCommand cmd = new SqliteCommand(query, con);
                 cmd.Parameters.AddWithValue("@id", id);
 
                 con.Open();

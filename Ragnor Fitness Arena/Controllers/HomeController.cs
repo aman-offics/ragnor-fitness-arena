@@ -2,7 +2,7 @@
 
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
+using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Ragnor_Fitness_Arena.Models;
@@ -50,22 +50,25 @@ namespace Ragnor_Fitness_Arena.Controllers
             {
                 string conStr = _configuration.GetConnectionString("DefaultConnection");
 
-                using (SqlConnection con = new SqlConnection(conStr))
+                using (SqliteConnection con = new SqliteConnection(conStr))
                 {
                     string query = "SELECT PlanId, PlanName, Price, Duration, Features FROM MembershipPlans";
-                    SqlCommand cmd = new SqlCommand(query, con);
+                    SqliteCommand cmd = new SqliteCommand(query, con);
 
                     con.Open();
-                    SqlDataReader reader = cmd.ExecuteReader();
+                    SqliteDataReader reader = cmd.ExecuteReader();
 
                     while (reader.Read())
                     {
                         plans.Add(new MembershipPlan
                         {
-                            PlanId = (int)reader["PlanId"],
+                            //PlanId = (int)reader["PlanId"],
                             PlanName = reader["PlanName"].ToString(),
-                            Price = (decimal)reader["Price"],
-                            Duration = reader["Duration"].ToString(),
+                            //Price = (decimal)reader["Price"],
+                            PlanId = Convert.ToInt32(reader["PlanId"]),
+                            Price = Convert.ToDecimal(reader["Price"]),
+                            //Duration = reader["Duration"].ToString(),
+                            Duration = Convert.ToInt32(reader["Duration"]).ToString(),
                             Features = reader["Features"].ToString()
                         });
                     }
@@ -89,13 +92,13 @@ namespace Ragnor_Fitness_Arena.Controllers
             {
                 string conStr = _configuration.GetConnectionString("DefaultConnection");
 
-                using (SqlConnection con = new SqlConnection(conStr))
+                using (SqliteConnection con = new SqliteConnection(conStr))
                 {
                     string query = @"INSERT INTO TrialBookings 
                                      (FullName, PhoneNumber, PreferredDate, Message) 
                                      VALUES (@n, @p, @d, @m)";
 
-                    SqlCommand cmd = new SqlCommand(query, con);
+                    SqliteCommand cmd = new SqliteCommand(query, con);
                     cmd.Parameters.AddWithValue("@n", FullName);
                     cmd.Parameters.AddWithValue("@p", PhoneNumber);
                     cmd.Parameters.AddWithValue("@d", PreferredDate);
@@ -123,13 +126,13 @@ namespace Ragnor_Fitness_Arena.Controllers
         //{
         //    try
         //    {
-        //        using (SqlConnection con = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+        //        using (SqliteConnection con = new SqliteConnection(_configuration.GetConnectionString("DefaultConnection")))
         //        {
         //            string query = @"INSERT INTO TrainerAppointments
         //                (FullName,PhoneNumber,TrainerName,AppointmentDate,AppointmentTime,Message)
         //                VALUES (@FullName,@PhoneNumber,@TrainerName,@AppointmentDate,@AppointmentTime,@Message)";
 
-        //            SqlCommand cmd = new SqlCommand(query, con);
+        //            SqliteCommand cmd = new SqliteCommand(query, con);
         //            cmd.Parameters.AddWithValue("@FullName", model.FullName);
         //            cmd.Parameters.AddWithValue("@PhoneNumber", model.PhoneNumber);
         //            cmd.Parameters.AddWithValue("@TrainerName", model.TrainerName);
@@ -165,13 +168,13 @@ namespace Ragnor_Fitness_Arena.Controllers
 
         //        string conStr = _configuration.GetConnectionString("DefaultConnection");
 
-        //        using (SqlConnection con = new SqlConnection(conStr))
+        //        using (SqliteConnection con = new SqliteConnection(conStr))
         //        {
         //            string query = @"INSERT INTO TrainerAppointments
         //    (FullName,PhoneNumber,TrainerName,AppointmentDate,AppointmentTime,Message)
         //    VALUES (@FullName,@PhoneNumber,@TrainerName,@AppointmentDate,@AppointmentTime,@Message)";
 
-        //            SqlCommand cmd = new SqlCommand(query, con);
+        //            SqliteCommand cmd = new SqliteCommand(query, con);
 
         //            cmd.Parameters.AddWithValue("@FullName", model.FullName ?? "");
         //            cmd.Parameters.AddWithValue("@PhoneNumber", model.PhoneNumber ?? "");
@@ -213,13 +216,13 @@ namespace Ragnor_Fitness_Arena.Controllers
 
                 string conStr = _configuration.GetConnectionString("DefaultConnection");
 
-                using (SqlConnection con = new SqlConnection(conStr))
+                using (SqliteConnection con = new SqliteConnection(conStr))
                 {
                     string query = @"INSERT INTO TrainerAppointments
             (FullName,PhoneNumber,TrainerName,AppointmentDate,AppointmentTime,Message)
             VALUES (@FullName,@PhoneNumber,@TrainerName,@AppointmentDate,@AppointmentTime,@Message)";
 
-                    SqlCommand cmd = new SqlCommand(query, con);
+                    SqliteCommand cmd = new SqliteCommand(query, con);
 
                     cmd.Parameters.AddWithValue("@FullName", model.FullName ?? "");
                     cmd.Parameters.AddWithValue("@PhoneNumber", model.PhoneNumber ?? "");
@@ -257,22 +260,25 @@ namespace Ragnor_Fitness_Arena.Controllers
             {
                 string conStr = _configuration.GetConnectionString("DefaultConnection");
 
-                using (SqlConnection con = new SqlConnection(conStr))
+                using (SqliteConnection con = new SqliteConnection(conStr))
                 {
                     string query = "SELECT * FROM MembershipPlans";
-                    SqlCommand cmd = new SqlCommand(query, con);
+                    SqliteCommand cmd = new SqliteCommand(query, con);
 
                     con.Open();
-                    SqlDataReader reader = cmd.ExecuteReader();
+                    SqliteDataReader reader = cmd.ExecuteReader();
 
                     while (reader.Read())
                     {
                         plans.Add(new MembershipPlan
                         {
-                            PlanId = (int)reader["PlanId"],
+                            PlanId = Convert.ToInt32(reader["PlanId"]),
+                            Price = Convert.ToDecimal(reader["Price"]),
+                            //PlanId = (int)reader["PlanId"],
                             PlanName = reader["PlanName"].ToString(),
-                            Price = (decimal)reader["Price"],
-                            Duration = reader["Duration"].ToString(),
+                            //Price = (decimal)reader["Price"],
+                            //Duration = reader["Duration"].ToString(),
+                            Duration = Convert.ToInt32(reader["Duration"]).ToString(),
                             Features = reader["Features"].ToString()
                         });
                     }
@@ -301,13 +307,13 @@ namespace Ragnor_Fitness_Arena.Controllers
             {
                 string conStr = _configuration.GetConnectionString("DefaultConnection");
 
-                using (SqlConnection con = new SqlConnection(conStr))
+                using (SqliteConnection con = new SqliteConnection(conStr))
                 {
                     string query = @"INSERT INTO Contacts 
                         (Name, Email, Comment, CreatedAt, Status) 
                         VALUES (@n, @e, @c, @d, 'New')";
 
-                    SqlCommand cmd = new SqlCommand(query, con);
+                    SqliteCommand cmd = new SqliteCommand(query, con);
                     cmd.Parameters.AddWithValue("@n", Name);
                     cmd.Parameters.AddWithValue("@e", Email);
                     cmd.Parameters.AddWithValue("@c", Comment);
