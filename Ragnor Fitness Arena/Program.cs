@@ -47,4 +47,45 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+
+
+using (var scope = app.Services.CreateScope())
+{
+    var conStr = builder.Configuration.GetConnectionString("DefaultConnection");
+
+    using var con = new Microsoft.Data.Sqlite.SqliteConnection(conStr);
+
+    con.Open();
+
+    string sql = @"
+
+    CREATE TABLE IF NOT EXISTS MembershipPlans (
+        PlanId INTEGER PRIMARY KEY AUTOINCREMENT,
+        PlanName TEXT,
+        Price REAL,
+        Duration INTEGER,
+        Features TEXT
+    );
+
+    CREATE TABLE IF NOT EXISTS Users (
+        UserId INTEGER PRIMARY KEY AUTOINCREMENT,
+        FullName TEXT,
+        Email TEXT,
+        Password TEXT,
+        CreatedAt TEXT
+    );
+
+    CREATE TABLE IF NOT EXISTS Admins (
+        AdminId INTEGER PRIMARY KEY AUTOINCREMENT,
+        Username TEXT,
+        Password TEXT
+    );
+
+    ";
+
+    var cmd = new Microsoft.Data.Sqlite.SqliteCommand(sql, con);
+
+    cmd.ExecuteNonQuery();
+}
+
 app.Run();
