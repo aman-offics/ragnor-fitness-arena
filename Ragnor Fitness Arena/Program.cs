@@ -1,4 +1,6 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using Microsoft.Data.Sqlite;
+
+var builder = WebApplication.CreateBuilder(args);
 
 // 🔥 Add services
 builder.Services.AddControllersWithViews();
@@ -49,11 +51,13 @@ app.MapControllerRoute(
 
 
 
+using Microsoft.Data.Sqlite;
+
 using (var scope = app.Services.CreateScope())
 {
     var conStr = builder.Configuration.GetConnectionString("DefaultConnection");
 
-    using var con = new Microsoft.Data.Sqlite.SqliteConnection(conStr);
+    using var con = new SqliteConnection(conStr);
 
     con.Open();
 
@@ -64,7 +68,8 @@ using (var scope = app.Services.CreateScope())
         PlanName TEXT,
         Price REAL,
         Duration INTEGER,
-        Features TEXT
+        Features TEXT,
+        CreatedAt TEXT
     );
 
     CREATE TABLE IF NOT EXISTS Users (
@@ -81,11 +86,69 @@ using (var scope = app.Services.CreateScope())
         Password TEXT
     );
 
+    CREATE TABLE IF NOT EXISTS Contacts (
+        Id INTEGER PRIMARY KEY AUTOINCREMENT,
+        Name TEXT,
+        Email TEXT,
+        Comment TEXT,
+        CreatedAt TEXT,
+        Status TEXT
+    );
+
+    CREATE TABLE IF NOT EXISTS TrialBookings (
+        Id INTEGER PRIMARY KEY AUTOINCREMENT,
+        FullName TEXT,
+        PhoneNumber TEXT,
+        PreferredDate TEXT,
+        Message TEXT,
+        CreatedAt TEXT,
+        Status TEXT
+    );
+
+    CREATE TABLE IF NOT EXISTS TrainerAppointments (
+        Id INTEGER PRIMARY KEY AUTOINCREMENT,
+        FullName TEXT,
+        PhoneNumber TEXT,
+        TrainerName TEXT,
+        AppointmentDate TEXT,
+        AppointmentTime TEXT,
+        Message TEXT,
+        Status TEXT,
+        CreatedAt TEXT
+    );
+
+    CREATE TABLE IF NOT EXISTS UserMemberships (
+        Id INTEGER PRIMARY KEY AUTOINCREMENT,
+        UserId INTEGER,
+        PlanId INTEGER,
+        StartDate TEXT,
+        ExpiryDate TEXT
+    );
+
     ";
 
-    var cmd = new Microsoft.Data.Sqlite.SqliteCommand(sql, con);
+    var cmd = new SqliteCommand(sql, con);
 
     cmd.ExecuteNonQuery();
+
+    // Default Admin
+    string adminCheck = "SELECT COUNT(*) FROM Admins";
+
+    var checkCmd = new SqliteCommand(adminCheck, con);
+
+    int adminCount = Convert.ToInt32(checkCmd.ExecuteScalar());
+
+    if (adminCount == 0)
+    {
+        string insertAdmin = @"
+        INSERT INTO Admins (Username, Password)
+        VALUES ('admin', 'admin123')
+        ";
+
+        var insertCmd = new SqliteCommand(insertAdmin, con);
+
+        insertCmd.ExecuteNonQuery();
+    }
 }
 
 app.Run();
